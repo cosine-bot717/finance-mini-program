@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>金融小程序</title>
+<style>
+:root{
+  --bg:#F4EFE6;
+  --bg2:#EDE7DB;
+  --card:#FFFFFF;
+  --card2:#FAF7F2;
+  --gold:#C8860A;
+  --gold2:#E8A020;
+  --gold-light:#F5D48A;
+  --gold-pale:#FBF3E0;
+  --text:#1A1612;
+  --text2:#5A5248;
+  --muted:#9A9088;
+  --border:#E0D9CE;
+  --red:#D94040;
+  --green:#1A8A60;
+  --divider:#EDE7DB;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,'PingFang SC','Helvetica Neue',sans-serif;
+  max-width:390px;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+}
+
+/* TOP BAR */
+.top-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px 12px;
+  background:var(--card);
+  flex-shrink:0;
+  border-bottom:1px solid var(--border);
+}
+.top-bar .title{font-size:16px;font-weight:700;color:var(--text);letter-spacing:.2px}
+.top-bar .icon-btn{
+  width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+  color:var(--muted);
+}
+.top-bar .icon-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* PAGES */
+.pages{flex:1;overflow:hidden;position:relative}
+.page{
+  position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
+  display:none;scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  background:var(--bg);
+}
+.page::-webkit-scrollbar{display:none}
+.page.active{display:block}
+#page-ai.active{display:flex;flex-direction:column}
+
+/* TAB BAR */
+.tab-bar{
+  flex-shrink:0;display:flex;
+  background:var(--card);
+  border-top:1px solid var(--border);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:9px 0 8px;cursor:pointer;
+}
+.tab svg{width:22px;height:22px;stroke:var(--muted);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s}
+.tab span{font-size:10px;color:var(--muted);transition:color .2s}
+.tab.active svg{stroke:var(--gold)}
+.tab.active span{color:var(--gold);font-weight:600}
+
+/* shared utils */
+.up{color:var(--red)}
+.down{color:var(--green)}
+.sec-head{display:flex;justify-content:space-between;align-items:center;padding:16px 16px 10px}
+.sec-head h2{font-size:14px;font-weight:700;color:var(--text)}
+.sec-head a{font-size:12px;color:var(--gold);cursor:pointer}
+
+/* ═══════════════════════════════
+   PAGE 1  大盘
+═══════════════════════════════ */
+.market-banner{
+  background:var(--card);
+  padding:14px 16px 16px;
+  border-bottom:1px solid var(--border);
+}
+.market-meta{font-size:11px;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:5px}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+.idx-row{display:flex;gap:9px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.idx-row::-webkit-scrollbar{display:none}
+.idx-card{
+  min-width:112px;flex-shrink:0;
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:12px;padding:11px 12px 10px;
+}
+.idx-name{font-size:10px;color:var(--muted);margin-bottom:5px}
+.idx-val{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+.idx-chg{font-size:10px;margin-top:3px}
+.spark{display:block;margin-top:8px}
+
+/* area chart */
+.chart-wrap{padding:2px 16px 8px}
+.chart-wrap svg{display:block;width:100%;height:auto}
+.chart-axis{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);padding:4px 0 0}
+
+/* heatmap */
+.heatmap{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:0 16px 4px}
+.hcell{border-radius:10px;padding:10px 8px;text-align:center}
+.hcell .hn{font-size:12px;font-weight:500;color:var(--text)}
+.hcell .hp{font-size:12px;font-weight:700;margin-top:3px}
+
+/* stock table */
+.stk-head,.stk-row{
+  display:grid;grid-template-columns:1fr 86px 72px;
+  padding:0 16px;
+}
+.stk-head{font-size:11px;color:var(--muted);padding-bottom:6px}
+.stk-head span:last-child{text-align:right}
+.stk-row{
+  padding-top:11px;padding-bottom:11px;
+  border-top:1px solid var(--divider);
+  align-items:center;
+}
+.sname{font-size:14px;font-weight:600;color:var(--text)}
+.scode{font-size:11px;color:var(--muted);margin-top:2px}
+.sprice{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+.badge{
+  float:right;display:inline-block;padding:4px 8px;
+  border-radius:6px;font-size:11px;font-weight:700;
+}
+.badge.up{background:rgba(217,64,64,.1);color:var(--red)}
+.badge.down{background:rgba(26,138,96,.1);color:var(--green)}
+
+/* ═══════════════════════════════
+   PAGE 2  AI助手
+═══════════════════════════════ */
+.ai-header{
+  background:var(--card);
+  border-bottom:1px solid var(--border);
+  padding:16px 16px 14px;text-align:center;flex-shrink:0;
+}
+.ai-icon{
+  width:48px;height:48px;border-radius:14px;
+  background:var(--gold-pale);border:1px solid var(--gold-light);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 9px;
+}
+.ai-icon svg{width:24px;height:24px;stroke:var(--gold);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ai-name{font-size:15px;font-weight:700;color:var(--text)}
+.ai-sub{font-size:11px;color:var(--muted);margin-top:3px}
+
+.chip-row{
+  display:flex;gap:7px;padding:10px 14px;
+  overflow-x:auto;scrollbar-width:none;flex-shrink:0;
+  background:var(--card);border-bottom:1px solid var(--border);
+}
+.chip-row::-webkit-scrollbar{display:none}
+.chip{
+  white-space:nowrap;flex-shrink:0;
+  background:var(--gold-pale);border:1px solid var(--gold-light);
+  border-radius:20px;padding:6px 13px;
+  font-size:12px;color:var(--gold);cursor:pointer;
+}
+
+.chat-body{
+  flex:1;overflow-y:auto;padding:14px;
+  display:flex;flex-direction:column;gap:14px;
+  scrollbar-width:none;background:var(--bg);
+}
+.chat-body::-webkit-scrollbar{display:none}
+
+.msg{display:flex;gap:9px;align-items:flex-start}
+.msg-av{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;flex-shrink:0;color:#fff;
+}
+.msg-ai .msg-av{background:var(--gold2)}
+.msg-user .msg-av{background:var(--text2)}
+.bubble-wrap{max-width:76%}
+.bubble{
+  padding:10px 13px;border-radius:14px;
+  font-size:13.5px;line-height:1.6;
+}
+.msg-ai .bubble{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:3px 14px 14px 14px;
+  color:var(--text);
+}
+.msg-user .bubble{
+  background:var(--gold2);
+  border-radius:3px 14px 14px 14px;
+  color:#fff;
+}
+.msg-time{font-size:10px;color:var(--muted);margin-top:4px;padding-left:2px}
+
+.typing-dots{display:flex;gap:5px;align-items:center;padding:2px 0}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:blink 1.2s infinite}
+.dot:nth-child(2){animation-delay:.3s}
+.dot:nth-child(3){animation-delay:.6s}
+@keyframes blink{0%,100%{opacity:.2;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+
+.chat-inp-bar{
+  flex-shrink:0;display:flex;gap:9px;align-items:center;
+  padding:10px 14px 12px;
+  background:var(--card);border-top:1px solid var(--border);
+}
+.chat-inp{
+  flex:1;background:var(--bg2);
+  border:1px solid var(--border);border-radius:22px;
+  padding:9px 15px;color:var(--text);font-size:14px;outline:none;
+}
+.chat-inp::placeholder{color:var(--muted)}
+.chat-inp:focus{border-color:var(--gold-light)}
+.send-btn{
+  width:37px;height:37px;border-radius:50%;flex-shrink:0;cursor:pointer;
+  background:var(--gold2);
+  display:flex;align-items:center;justify-content:center;
+}
+.send-btn svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;margin-left:2px}
+
+/* ═══════════════════════════════
+   PAGE 3  论坛
+═══════════════════════════════ */
+.forum-tab-bar{
+  display:flex;padding:0 14px;gap:18px;
+  background:var(--card);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:5;
+}
+.ftab{
+  padding:13px 0;font-size:13.5px;color:var(--muted);
+  cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;
+}
+.ftab.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:700}
+
+.tag-row{
+  display:flex;gap:7px;padding:11px 14px;
+  overflow-x:auto;scrollbar-width:none;
+  background:var(--card);border-bottom:1px solid var(--border);
+}
+.tag-row::-webkit-scrollbar{display:none}
+.tag{
+  white-space:nowrap;
+  background:var(--gold-pale);border:1px solid var(--gold-light);
+  border-radius:20px;padding:5px 12px;font-size:12px;color:var(--gold);
+}
+
+.sentiment{
+  margin:12px 14px;
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;
+}
+.sentiment-head{
+  padding:11px 14px;font-size:12px;font-weight:700;color:var(--gold);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:6px;
+}
+.sentiment-head .dot-live{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+.sc-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 14px;border-bottom:1px solid var(--divider);font-size:13px;
+}
+.sc-row:last-child{border-bottom:none}
+.sc-lbl{color:var(--text2)}
+
+.post{
+  background:var(--card);margin:0 0 1px;
+  padding:14px;border-bottom:1px solid var(--divider);
+}
+.post-top{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.ava{
+  width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:#fff;
+}
+.uname{font-size:13px;font-weight:600;color:var(--text)}
+.ptime{font-size:11px;color:var(--muted);margin-top:1px}
+.pbadge{
+  margin-left:auto;font-size:10px;padding:3px 9px;
+  border-radius:9px;font-weight:600;white-space:nowrap;
+}
+.post-title{font-size:14px;font-weight:700;line-height:1.45;color:var(--text);margin-bottom:6px}
+.post-body{
+  font-size:12.5px;color:var(--text2);line-height:1.55;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.post-foot{display:flex;gap:14px;margin-top:11px;align-items:center}
+.pact{display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--muted)}
+.pact svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.pshare{margin-left:auto;font-size:12px;color:var(--gold)}
+
+.fab-wrap{display:flex;justify-content:flex-end;padding:16px 14px 8px;background:var(--bg)}
+.fab{
+  width:44px;height:44px;border-radius:50%;
+  background:var(--gold2);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 4px 14px rgba(200,134,10,.3);
+}
+.fab svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── 圈子列表 ── */
+.forum-head{padding:14px 14px 10px;background:var(--card);border-bottom:1px solid var(--border)}
+.forum-head-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px}
+.forum-head-sub{font-size:11px;color:var(--muted)}
+.circle-list{display:flex;flex-direction:column;gap:0}
+.circle-card{
+  background:var(--card);border-bottom:1px solid var(--border);
+  padding:16px 14px;cursor:pointer;display:flex;gap:13px;align-items:flex-start;
+}
+.circle-card:active{background:var(--card2)}
+.circle-icon{
+  width:52px;height:52px;border-radius:14px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.circle-icon svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.circle-info{flex:1;min-width:0}
+.circle-name{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px}
+.circle-desc{font-size:12px;color:var(--text2);line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.circle-meta{display:flex;gap:14px;margin-top:8px}
+.circle-meta span{font-size:11px;color:var(--muted)}
+.circle-meta strong{color:var(--text2);font-weight:600}
+.circle-arrow{
+  flex-shrink:0;width:28px;height:28px;border-radius:50%;
+  background:var(--gold-pale);border:1px solid var(--gold-light);
+  display:flex;align-items:center;justify-content:center;margin-top:10px;
+}
+.circle-arrow svg{width:14px;height:14px;stroke:var(--gold);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── 圈子详情页 ── */
+#page-circle{background:var(--bg)}
+.circle-banner{
+  padding:20px 16px 18px;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+}
+.circle-banner-icon{
+  width:64px;height:64px;border-radius:18px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:11px;
+}
+.circle-banner-icon svg{width:32px;height:32px;stroke:#fff;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.circle-banner-name{font-size:18px;font-weight:700;color:var(--text);margin-bottom:5px}
+.circle-banner-desc{font-size:13px;color:var(--text2);line-height:1.55;max-width:280px}
+.circle-stats{display:flex;justify-content:center;gap:32px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);width:100%}
+.cstat{text-align:center}
+.cstat-val{font-size:16px;font-weight:700;color:var(--text)}
+.cstat-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.join-btn{
+  margin-top:14px;
+  background:var(--gold2);color:#fff;font-size:14px;font-weight:600;
+  border:none;border-radius:22px;padding:10px 36px;cursor:pointer;
+}
+
+/* 圈主卡片 */
+.owner-card{
+  margin:0 14px 2px;background:var(--card);
+  border:1px solid var(--border);border-radius:12px;overflow:hidden;
+}
+.owner-head{
+  padding:12px 14px;font-size:12px;font-weight:700;color:var(--gold);
+  border-bottom:1px solid var(--border);
+}
+.owner-body{display:flex;gap:12px;padding:14px;align-items:flex-start}
+.owner-av{
+  width:44px;height:44px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:700;color:#fff;
+}
+.owner-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px}
+.owner-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;background:var(--gold-pale);color:var(--gold);border:1px solid var(--gold-light);margin-bottom:6px}
+.owner-bio{font-size:12px;color:var(--text2);line-height:1.55}
+
+/* 帖子区（复用 post 样式，加个分区标题）*/
+.posts-section-head{
+  padding:14px 14px 10px;font-size:13px;font-weight:700;color:var(--text);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.posts-section-head span{font-size:12px;color:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="icon-btn" id="leftBtn" onclick="handleLeft()">
+    <svg id="leftBtnIcon" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </div>
+  <div class="title" id="barTitle">金融大盘</div>
+  <div class="icon-btn"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+</div>
+
+<!-- PAGES -->
+<div class="pages">
+
+<!-- ── PAGE 1 大盘 ── -->
+<div class="page active" id="page-market">
+
+  <div class="market-banner">
+    <div class="market-meta">
+      <span class="live-dot"></span>
+      2026年5月27日 &nbsp;周三&nbsp;·&nbsp;交易进行中
+    </div>
+    <div class="idx-row">
+      <div class="idx-card">
+        <div class="idx-name">上证指数</div>
+        <div class="idx-val up">3,412.56</div>
+        <div class="idx-chg up">+1.23%&nbsp;&nbsp;+41.36</div>
+        <svg class="spark" width="90" height="24" viewBox="0 0 90 24">
+          <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D94040" stop-opacity=".2"/><stop offset="100%" stop-color="#D94040" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0,20 C14,17 26,14 36,10 C46,6 58,9 68,5 C78,1 84,3 90,2 L90,24 L0,24Z" fill="url(#g1)"/>
+          <path d="M0,20 C14,17 26,14 36,10 C46,6 58,9 68,5 C78,1 84,3 90,2" fill="none" stroke="#D94040" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="idx-card">
+        <div class="idx-name">深证成指</div>
+        <div class="idx-val up">10,876.34</div>
+        <div class="idx-chg up">+0.87%&nbsp;&nbsp;+93.54</div>
+        <svg class="spark" width="90" height="24" viewBox="0 0 90 24">
+          <defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D94040" stop-opacity=".2"/><stop offset="100%" stop-color="#D94040" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0,18 C12,20 24,14 36,12 C48,10 60,14 70,8 C80,4 85,6 90,3 L90,24 L0,24Z" fill="url(#g2)"/>
+          <path d="M0,18 C12,20 24,14 36,12 C48,10 60,14 70,8 C80,4 85,6 90,3" fill="none" stroke="#D94040" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="idx-card">
+        <div class="idx-name">创业板指</div>
+        <div class="idx-val down">2,156.78</div>
+        <div class="idx-chg down">-0.42%&nbsp;&nbsp;-9.18</div>
+        <svg class="spark" width="90" height="24" viewBox="0 0 90 24">
+          <defs><linearGradient id="g3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1A8A60" stop-opacity=".2"/><stop offset="100%" stop-color="#1A8A60" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0,6 C12,8 24,8 36,12 C48,16 60,13 70,18 C80,22 85,20 90,22 L90,24 L0,24Z" fill="url(#g3)"/>
+          <path d="M0,6 C12,8 24,8 36,12 C48,16 60,13 70,18 C80,22 85,20 90,22" fill="none" stroke="#1A8A60" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="idx-card">
+        <div class="idx-name">纳斯达克</div>
+        <div class="idx-val up">19,245.12</div>
+        <div class="idx-chg up">+2.14%&nbsp;&nbsp;+404</div>
+        <svg class="spark" width="90" height="24" viewBox="0 0 90 24">
+          <defs><linearGradient id="g4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D94040" stop-opacity=".2"/><stop offset="100%" stop-color="#D94040" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0,22 C14,19 26,16 36,12 C46,8 58,10 68,6 C78,2 84,3 90,1 L90,24 L0,24Z" fill="url(#g4)"/>
+          <path d="M0,22 C14,19 26,16 36,12 C46,8 58,10 68,6 C78,2 84,3 90,1" fill="none" stroke="#D94040" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="idx-card">
+        <div class="idx-name">恒生指数</div>
+        <div class="idx-val up">23,018.40</div>
+        <div class="idx-chg up">+1.38%&nbsp;&nbsp;+312</div>
+        <svg class="spark" width="90" height="24" viewBox="0 0 90 24">
+          <defs><linearGradient id="g5" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D94040" stop-opacity=".2"/><stop offset="100%" stop-color="#D94040" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0,20 C14,17 26,15 36,11 C46,7 58,10 68,6 C78,2 84,4 90,2 L90,24 L0,24Z" fill="url(#g5)"/>
+          <path d="M0,20 C14,17 26,15 36,11 C46,7 58,10 68,6 C78,2 84,4 90,2" fill="none" stroke="#D94040" stroke-width="1.5"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- 走势图 -->
+  <div class="sec-head"><h2>上证今日走势</h2></div>
+  <div class="chart-wrap">
+    <svg viewBox="0 0 358 90" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="mainG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#D94040" stop-opacity=".18"/>
+          <stop offset="100%" stop-color="#D94040" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <line x1="0" y1="22" x2="358" y2="22" stroke="#E0D9CE" stroke-width="1"/>
+      <line x1="0" y1="45" x2="358" y2="45" stroke="#E0D9CE" stroke-width="1"/>
+      <line x1="0" y1="68" x2="358" y2="68" stroke="#E0D9CE" stroke-width="1"/>
+      <path d="M0,76 C22,70 42,65 62,56 C82,47 102,52 122,43 C142,34 162,39 182,30 C202,21 222,26 242,17 C262,8 282,11 302,7 C322,3 340,5 358,4 L358,90 L0,90Z" fill="url(#mainG)"/>
+      <path d="M0,76 C22,70 42,65 62,56 C82,47 102,52 122,43 C142,34 162,39 182,30 C202,21 222,26 242,17 C262,8 282,11 302,7 C322,3 340,5 358,4" fill="none" stroke="#D94040" stroke-width="1.8"/>
+      <circle cx="358" cy="4" r="3" fill="#D94040"/>
+    </svg>
+    <div class="chart-axis"><span>9:30</span><span>10:30</span><span>11:30</span><span>13:00</span><span>14:00</span><span>15:00</span></div>
+  </div>
+
+  <!-- 板块热力 -->
+  <div class="sec-head" style="margin-top:4px"><h2>板块热力</h2><a>换一批</a></div>
+  <div class="heatmap">
+    <div class="hcell" style="background:#F9E0E0"><div class="hn">半导体</div><div class="hp up">+3.21%</div></div>
+    <div class="hcell" style="background:#F9E4E0"><div class="hn">AI 科技</div><div class="hp up">+2.98%</div></div>
+    <div class="hcell" style="background:#FBE8DF"><div class="hn">新能源</div><div class="hp up">+2.45%</div></div>
+    <div class="hcell" style="background:#FCEEE8"><div class="hn">银行</div><div class="hp up">+1.10%</div></div>
+    <div class="hcell" style="background:#FDF3ED"><div class="hn">消费</div><div class="hp up">+0.88%</div></div>
+    <div class="hcell" style="background:#FEF6F2"><div class="hn">军工</div><div class="hp up">+0.67%</div></div>
+    <div class="hcell" style="background:#F0F8F4"><div class="hn">农业</div><div class="hp down">-0.23%</div></div>
+    <div class="hcell" style="background:#E6F4EE"><div class="hn">医药</div><div class="hp down">-0.54%</div></div>
+    <div class="hcell" style="background:#D8EFE6"><div class="hn">地产</div><div class="hp down">-1.32%</div></div>
+  </div>
+
+  <!-- 热门个股 -->
+  <div class="sec-head" style="margin-top:4px"><h2>热门个股</h2><a>更多 ›</a></div>
+  <div class="stk-head"><span>名称</span><span style="text-align:right">最新价</span><span style="text-align:right">涨跌幅</span></div>
+  <div class="stk-row">
+    <div><div class="sname">中芯国际</div><div class="scode">688981</div></div>
+    <div class="sprice up" style="text-align:right">87.35</div>
+    <div><span class="badge up">+5.20%</span></div>
+  </div>
+  <div class="stk-row">
+    <div><div class="sname">宁德时代</div><div class="scode">300750</div></div>
+    <div class="sprice up" style="text-align:right">245.60</div>
+    <div><span class="badge up">+4.32%</span></div>
+  </div>
+  <div class="stk-row">
+    <div><div class="sname">比亚迪</div><div class="scode">002594</div></div>
+    <div class="sprice up" style="text-align:right">312.40</div>
+    <div><span class="badge up">+2.87%</span></div>
+  </div>
+  <div class="stk-row">
+    <div><div class="sname">贵州茅台</div><div class="scode">600519</div></div>
+    <div class="sprice down" style="text-align:right">1,652.00</div>
+    <div><span class="badge down">-0.91%</span></div>
+  </div>
+  <div class="stk-row">
+    <div><div class="sname">恒瑞医药</div><div class="scode">600276</div></div>
+    <div class="sprice down" style="text-align:right">56.80</div>
+    <div><span class="badge down">-1.45%</span></div>
+  </div>
+  <div style="height:20px"></div>
+</div>
+
+<!-- ── PAGE 2 AI助手 ── -->
+<div class="page" id="page-ai">
+  <div class="ai-header">
+    <div class="ai-icon">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="10" r="1.2" fill="var(--gold)"/><circle cx="15" cy="10" r="1.2" fill="var(--gold)"/><path d="M9 14.5s1 1.5 3 1.5 3-1.5 3-1.5"/></svg>
+    </div>
+    <div class="ai-name">金融 AI 助手</div>
+    <div class="ai-sub">实时行情分析 · 仅供参考，不构成投资建议</div>
+  </div>
+
+  <div class="chip-row">
+    <div class="chip" onclick="quickAsk(this)">今日大盘分析</div>
+    <div class="chip" onclick="quickAsk(this)">推荐潜力板块</div>
+    <div class="chip" onclick="quickAsk(this)">风险评估</div>
+    <div class="chip" onclick="quickAsk(this)">理财规划建议</div>
+    <div class="chip" onclick="quickAsk(this)">最新市场资讯</div>
+  </div>
+
+  <div class="chat-body" id="chatBody">
+    <div class="msg msg-ai">
+      <div class="msg-av" style="font-size:11px;font-weight:700;background:var(--gold2)">AI</div>
+      <div class="bubble-wrap">
+        <div class="bubble">您好，我是您的金融 AI 助手。<br><br>今日大盘整体向好，上证指数上涨 <strong style="color:var(--red)">+1.23%</strong>，半导体与 AI 科技板块领涨，北向资金持续净流入。请问有什么想了解的？</div>
+        <div class="msg-time">09:35</div>
+      </div>
+    </div>
+    <div class="msg msg-user">
+      <div class="msg-av" style="background:var(--text2)">我</div>
+      <div class="bubble-wrap">
+        <div class="bubble">中芯国际今天涨这么多，能继续持仓吗？</div>
+        <div class="msg-time">10:12</div>
+      </div>
+    </div>
+    <div class="msg msg-ai">
+      <div class="msg-av" style="font-size:11px;font-weight:700;background:var(--gold2)">AI</div>
+      <div class="bubble-wrap">
+        <div class="bubble">中芯国际 (688981) 今日涨幅 <strong style="color:var(--red)">+5.20%</strong>，主要驱动因素：<br><br>· 国产替代政策持续催化<br>· 28nm 制程订单饱满<br>· 机构资金近期持续净流入<br><br>短期有获利盘压力，建议分批持有，止损位参考 82.00。<br><br><span style="color:var(--muted);font-size:12px">以上仅供参考，不构成投资建议。</span></div>
+        <div class="msg-time">10:13</div>
+      </div>
+    </div>
+    <div class="msg msg-ai" id="typingMsg" style="display:none">
+      <div class="msg-av" style="font-size:11px;font-weight:700;background:var(--gold2)">AI</div>
+      <div class="bubble-wrap">
+        <div class="bubble"><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-inp-bar">
+    <input class="chat-inp" id="chatInput" placeholder="输入您的问题…"/>
+    <div class="send-btn" onclick="sendMsg()">
+      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE 3 论坛：圈子列表 ── -->
+<div class="page" id="page-forum">
+  <div class="forum-head">
+    <div class="forum-head-title">发现圈子</div>
+    <div class="forum-head-sub">加入感兴趣的圈子，与同好深度交流</div>
+  </div>
+
+  <div class="circle-list">
+
+    <div class="circle-card" onclick="openCircle(0)">
+      <div class="circle-icon" style="background:linear-gradient(135deg,#C8860A,#E8A020)">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div class="circle-info">
+        <div class="circle-name">A股实战圈</div>
+        <div class="circle-desc">聚焦 A 股技术分析与实战操盘，每日盘前盘后复盘，资深股民带你读懂市场信号。</div>
+        <div class="circle-meta">
+          <span><strong>12,480</strong> 成员</span>
+          <span><strong>326</strong> 今日帖子</span>
+        </div>
+      </div>
+      <div class="circle-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+
+    <div class="circle-card" onclick="openCircle(1)">
+      <div class="circle-icon" style="background:linear-gradient(135deg,#2A5298,#4A9EFF)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </div>
+      <div class="circle-info">
+        <div class="circle-name">基金研究所</div>
+        <div class="circle-desc">公募、私募、ETF 全覆盖，专业基金经理分享持仓逻辑与宏观配置思路，适合稳健型投资者。</div>
+        <div class="circle-meta">
+          <span><strong>8,214</strong> 成员</span>
+          <span><strong>197</strong> 今日帖子</span>
+        </div>
+      </div>
+      <div class="circle-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+
+    <div class="circle-card" onclick="openCircle(2)">
+      <div class="circle-icon" style="background:linear-gradient(135deg,#0F7A54,#17A87D)">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      </div>
+      <div class="circle-info">
+        <div class="circle-name">新手理财营</div>
+        <div class="circle-desc">专为投资新手设计，从账户开立到资产配置，手把手教你建立自己的投资体系，零基础可入。</div>
+        <div class="circle-meta">
+          <span><strong>31,056</strong> 成员</span>
+          <span><strong>512</strong> 今日帖子</span>
+        </div>
+      </div>
+      <div class="circle-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+
+    <div class="circle-card" onclick="openCircle(3)">
+      <div class="circle-icon" style="background:linear-gradient(135deg,#6B2FA0,#A855F7)">
+        <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+      <div class="circle-info">
+        <div class="circle-name">量化策略圈</div>
+        <div class="circle-desc">量化模型、因子挖掘、策略回测，汇聚数据科学家与量化研究员，代码与逻辑并重的专业社区。</div>
+        <div class="circle-meta">
+          <span><strong>4,380</strong> 成员</span>
+          <span><strong>89</strong> 今日帖子</span>
+        </div>
+      </div>
+      <div class="circle-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+
+    <div class="circle-card" onclick="openCircle(4)">
+      <div class="circle-icon" style="background:linear-gradient(135deg,#8B1A2F,#D94040)">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="circle-info">
+        <div class="circle-name">全球宏观研究</div>
+        <div class="circle-desc">美联储政策、汇率波动、大宗商品，从宏观视角解读全球资金流向，看懂世界经济的底层逻辑。</div>
+        <div class="circle-meta">
+          <span><strong>6,720</strong> 成员</span>
+          <span><strong>143</strong> 今日帖子</span>
+        </div>
+      </div>
+      <div class="circle-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+
+  </div>
+  <div style="height:16px"></div>
+</div>
+
+<!-- ── PAGE 4 圈子详情 ── -->
+<div class="page" id="page-circle">
+  <!-- banner 由 JS 动态填充 -->
+  <div id="circleBanner" class="circle-banner"></div>
+
+  <!-- 圈主介绍 -->
+  <div class="owner-card" id="circleOwner"></div>
+
+  <!-- 帖子列表 -->
+  <div class="posts-section-head">
+    <span style="font-size:13px;font-weight:700;color:var(--text)">圈内帖子</span>
+    <span>最新</span>
+  </div>
+  <div id="circlePosts"></div>
+  <div style="height:16px"></div>
+</div>
+
+</div><!-- /pages -->
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab('market','金融大盘',this)">
+    <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    <span>大盘</span>
+  </div>
+  <div class="tab" onclick="switchTab('ai','AI 助手',this)">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/><path d="M9 14.5s1 1.5 3 1.5 3-1.5 3-1.5"/></svg>
+    <span>AI 助手</span>
+  </div>
+  <div class="tab" onclick="switchTab('forum','金融论坛',this)">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span>论坛</span>
+  </div>
+</div>
+
+<script>
+/* ── 导航 ── */
+const MENU_ICON = `<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>`;
+const BACK_ICON = `<polyline points="15 18 9 12 15 6"/>`;
+let currentPage = 'market';
+
+function handleLeft(){
+  if(currentPage === 'circle') backToForum();
+}
+
+function setLeftBtn(isBack){
+  document.getElementById('leftBtnIcon').innerHTML = isBack ? BACK_ICON : MENU_ICON;
+}
+
+function switchTab(name,title,el){
+  document.querySelectorAll('.page').forEach(p=>{p.classList.remove('active');p.style.display='';});
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('barTitle').textContent = title;
+  currentPage = name;
+  setLeftBtn(false);
+  const pg = document.getElementById('page-'+name);
+  pg.classList.add('active');
+  if(name==='ai'){pg.style.display='flex';}
+}
+
+/* ── 圈子数据 ── */
+const circles = [
+  {
+    name:'A股实战圈',
+    color:'linear-gradient(135deg,#C8860A,#E8A020)',
+    icon:`<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>`,
+    members:'12,480', posts:'326',
+    desc:'聚焦 A 股技术分析与实战操盘，每日盘前盘后复盘，资深股民带你读懂市场信号，从理论走向真正的赚钱实践。',
+    owner:{ av:'韩', bg:'#B07010', name:'韩小北', tag:'资深股民 · 10年经验', bio:'曾任某私募交易员，专注技术面分析与量能研判，擅长捕捉主力资金异动，累计帮助 2000+ 学员建立实战操盘体系。' },
+    threads:[
+      {title:'中芯国际今日突破88元，后市如何看？',author:'张三峰',time:'5分钟前',view:'2,341',cmt:'67',like:'412'},
+      {title:'复盘今日半导体板块暴涨逻辑，附买点分析',author:'李玲芸',time:'22分钟前',view:'5,890',cmt:'134',like:'987',badge:'热帖'},
+      {title:'问一下大家，缩量上涨可信吗？',author:'王大力',time:'1小时前',view:'892',cmt:'41',like:'103'},
+    ]
+  },
+  {
+    name:'基金研究所',
+    color:'linear-gradient(135deg,#2A5298,#4A9EFF)',
+    icon:`<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>`,
+    members:'8,214', posts:'197',
+    desc:'公募、私募、ETF 全覆盖，专业基金经理分享持仓逻辑与宏观配置思路，适合稳健型投资者进阶学习。',
+    owner:{ av:'林', bg:'#2A5298', name:'林青鱼', tag:'公募基金经理 · CFA', bio:'10年公募从业经验，管理规模超50亿，擅长消费与科技赛道的深度基本面研究，坚信价值投资与长期持有的复利力量。' },
+    threads:[
+      {title:'2026 下半年三大主线：AI算力、低空经济、消费复苏',author:'林青鱼',time:'38分钟前',view:'12,450',cmt:'341',like:'2891',badge:'精华'},
+      {title:'ETF 定投到底选宽基还是行业指数？深度对比',author:'赵敏华',time:'2小时前',view:'4,210',cmt:'88',like:'567'},
+      {title:'聊聊我持仓的几只基金，附近3个月业绩归因',author:'陈江南',time:'4小时前',view:'3,100',cmt:'72',like:'344'},
+    ]
+  },
+  {
+    name:'新手理财营',
+    color:'linear-gradient(135deg,#0F7A54,#17A87D)',
+    icon:`<circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>`,
+    members:'31,056', posts:'512',
+    desc:'专为投资新手设计，从账户开立到资产配置，手把手教你建立自己的投资体系，零基础可入。',
+    owner:{ av:'沈', bg:'#0F7A54', name:'沈华', tag:'理财规划师 · CFP', bio:'15年理财教育经验，擅长将复杂金融概念拆解为简单易懂的语言，相信每个普通人都能通过正确的方法实现财富自由。' },
+    threads:[
+      {title:'新手入门：开户之前你必须知道的5件事',author:'沈华',time:'1小时前',view:'18,200',cmt:'420',like:'3200',badge:'置顶'},
+      {title:'定投沪深300还是买主动基金好？',author:'小张同学',time:'2小时前',view:'2,108',cmt:'93',like:'214'},
+      {title:'手里10万，如何做最简单的资产配置？',author:'菜鸟投资者',time:'3小时前',view:'6,430',cmt:'187',like:'891'},
+    ]
+  },
+  {
+    name:'量化策略圈',
+    color:'linear-gradient(135deg,#6B2FA0,#A855F7)',
+    icon:`<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>`,
+    members:'4,380', posts:'89',
+    desc:'量化模型、因子挖掘、策略回测，汇聚数据科学家与量化研究员，代码与逻辑并重的专业社区。',
+    owner:{ av:'周', bg:'#6B2FA0', name:'周天', tag:'量化研究员 · PhD', bio:'金融工程博士，曾任顶级私募量化研究员，专注多因子模型与高频数据挖掘，开源了多个量化策略框架并在 GitHub 获得5000+ Star。' },
+    threads:[
+      {title:'用 Python 跑了5年A股数据，发现胜率68.3%的量价规律',author:'周天',time:'2小时前',view:'8,720',cmt:'256',like:'1543',badge:'精华'},
+      {title:'动量因子在 A 股的衰减规律，附代码',author:'Alpha猎人',time:'5小时前',view:'3,410',cmt:'78',like:'620'},
+      {title:'请问大家用什么框架做策略回测？',author:'新手量化',time:'6小时前',view:'1,240',cmt:'54',like:'98'},
+    ]
+  },
+  {
+    name:'全球宏观研究',
+    color:'linear-gradient(135deg,#8B1A2F,#D94040)',
+    icon:`<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>`,
+    members:'6,720', posts:'143',
+    desc:'美联储政策、汇率波动、大宗商品，从宏观视角解读全球资金流向，看懂世界经济的底层逻辑。',
+    owner:{ av:'王', bg:'#8B1A2F', name:'王道远', tag:'宏观策略研究员', bio:'曾任国际投行宏观研究部门，覆盖美欧日中四大经济体，擅长通过货币政策与资本流动预判大类资产走势，现独立撰写宏观研究报告。' },
+    threads:[
+      {title:'美联储6月会议前瞻：降息预期再度升温',author:'王道远',time:'30分钟前',view:'9,840',cmt:'213',like:'1780',badge:'热帖'},
+      {title:'人民币汇率近期走强背后的三个逻辑',author:'汇市观察',time:'3小时前',view:'4,560',cmt:'96',like:'712'},
+      {title:'黄金突破历史高位后，还能上吗？',author:'大宗商品控',time:'5小时前',view:'7,230',cmt:'178',like:'1340'},
+    ]
+  },
+];
+
+function postHTML(p){
+  const svgEye=`<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  const svgCmt=`<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
+  const svgHrt=`<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+  const badge = p.badge ? `<div class="pbadge" style="background:#FDEAEA;color:var(--red)">${p.badge}</div>` : '';
+  const firstChar = p.author.charAt(0);
+  const colors = ['#B07010','#2A5298','#0F7A54','#6B2FA0','#8B1A2F','#C8860A'];
+  const bg = colors[p.author.charCodeAt(0) % colors.length];
+  return `<div class="post">
+    <div class="post-top">
+      <div class="ava" style="background:${bg}">${firstChar}</div>
+      <div><div class="uname">${p.author}</div><div class="ptime">${p.time}</div></div>
+      ${badge}
+    </div>
+    <div class="post-title">${p.title}</div>
+    <div class="post-foot">
+      <div class="pact">${svgEye}${p.view}</div>
+      <div class="pact">${svgCmt}${p.cmt}</div>
+      <div class="pact">${svgHrt}${p.like}</div>
+      <div class="pshare">分享</div>
+    </div>
+  </div>`;
+}
+
+function openCircle(idx){
+  const c = circles[idx];
+  const svgIcon = `<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${c.icon}</svg>`;
+
+  document.getElementById('circleBanner').innerHTML = `
+    <div class="circle-banner-icon" style="background:${c.color}">${svgIcon}</div>
+    <div class="circle-banner-name">${c.name}</div>
+    <div class="circle-banner-desc">${c.desc}</div>
+    <div class="circle-stats">
+      <div class="cstat"><div class="cstat-val">${c.members}</div><div class="cstat-lbl">成员</div></div>
+      <div class="cstat"><div class="cstat-val">${c.posts}</div><div class="cstat-lbl">今日帖子</div></div>
+      <div class="cstat"><div class="cstat-val">4.9</div><div class="cstat-lbl">评分</div></div>
+    </div>
+    <button class="join-btn">+ 加入圈子</button>`;
+
+  const o = c.owner;
+  document.getElementById('circleOwner').innerHTML = `
+    <div class="owner-head">圈主介绍</div>
+    <div class="owner-body">
+      <div class="owner-av" style="background:${o.bg}">${o.av}</div>
+      <div>
+        <div class="owner-name">${o.name}</div>
+        <div class="owner-tag">${o.tag}</div>
+        <div class="owner-bio">${o.bio}</div>
+      </div>
+    </div>`;
+
+  document.getElementById('circlePosts').innerHTML = c.threads.map(postHTML).join('');
+
+  document.querySelectorAll('.page').forEach(p=>{p.classList.remove('active');p.style.display='';});
+  const pg = document.getElementById('page-circle');
+  pg.classList.add('active');
+  pg.scrollTop = 0;
+  currentPage = 'circle';
+  document.getElementById('barTitle').textContent = c.name;
+  setLeftBtn(true);
+}
+
+function backToForum(){
+  document.querySelectorAll('.page').forEach(p=>{p.classList.remove('active');p.style.display='';});
+  document.getElementById('page-forum').classList.add('active');
+  currentPage = 'forum';
+  document.getElementById('barTitle').textContent = '金融论坛';
+  setLeftBtn(false);
+}
+
+/* ── AI 对话 ── */
+const replies=[
+  '根据当前实时数据分析，该方向短期波动风险需关注，建议控制仓位在20%以内。以上仅供参考。',
+  '从基本面角度看，您关注的方向具备一定配置价值，建议结合个人风险偏好综合判断。市场有风险，投资需谨慎。',
+  '今日北向资金净流入12.7亿，主力资金净流入86.4亿，市场情绪偏多，短期需关注获利盘压力。',
+  '当前市场处于震荡上行阶段，成长板块相对占优，建议关注半导体、AI算力相关标的。以上不构成投资建议。',
+  '理财规划建议：可参考"核心+卫星"配置策略，核心仓位配置宽基指数，卫星仓位布局高景气赛道。',
+];
+let ri=0;
+
+function sendMsg(){
+  const inp=document.getElementById('chatInput');
+  const text=inp.value.trim();
+  if(!text)return;
+  addMsg('user',text);
+  inp.value='';
+  showTyping(true);
+  setTimeout(()=>{showTyping(false);addMsg('ai',replies[ri++%replies.length]);},1400);
+}
+function quickAsk(el){
+  document.getElementById('chatInput').value=el.textContent;
+  sendMsg();
+}
+function addMsg(role,text){
+  const body=document.getElementById('chatBody');
+  const typing=document.getElementById('typingMsg');
+  const t=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
+  const d=document.createElement('div');
+  d.className=`msg msg-${role}`;
+  if(role==='ai'){
+    d.innerHTML=`<div class="msg-av" style="font-size:11px;font-weight:700;background:var(--gold2)">AI</div><div class="bubble-wrap"><div class="bubble">${text}</div><div class="msg-time">${t}</div></div>`;
+  } else {
+    d.innerHTML=`<div class="msg-av" style="background:var(--text2)">我</div><div class="bubble-wrap"><div class="bubble">${text}</div><div class="msg-time">${t}</div></div>`;
+  }
+  body.insertBefore(d,typing);
+  body.scrollTop=body.scrollHeight;
+}
+function showTyping(v){
+  const el=document.getElementById('typingMsg');
+  const body=document.getElementById('chatBody');
+  el.style.display=v?'flex':'none';
+  if(v)body.scrollTop=body.scrollHeight;
+}
+document.getElementById('chatInput').addEventListener('keypress',e=>{if(e.key==='Enter')sendMsg();});
+</script>
+</body>
+</html>
