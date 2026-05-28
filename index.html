@@ -231,134 +231,152 @@ body{
 .send-btn svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;margin-left:2px}
 
 /* ═══════════════════════════════
-   PAGE 3  论坛
+   PAGE 3  论坛 - 老师轮播驱动
 ═══════════════════════════════ */
-.forum-tab-bar{
-  display:flex;padding:0 14px;gap:18px;
-  background:var(--card);border-bottom:1px solid var(--border);
-  position:sticky;top:0;z-index:5;
-}
-.ftab{
-  padding:13px 0;font-size:13.5px;color:var(--muted);
-  cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;
-}
-.ftab.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:700}
 
-.tag-row{
-  display:flex;gap:7px;padding:11px 14px;
-  overflow-x:auto;scrollbar-width:none;
-  background:var(--card);border-bottom:1px solid var(--border);
+/* 老师轮播 */
+.teacher-slider-wrap{
+  background:var(--bg);padding:14px 0 0;
 }
-.tag-row::-webkit-scrollbar{display:none}
-.tag{
-  white-space:nowrap;
-  background:var(--gold-pale);border:1px solid var(--gold-light);
-  border-radius:20px;padding:5px 12px;font-size:12px;color:var(--gold);
+.teacher-slider{
+  position:relative;width:100%;
 }
-
-.sentiment{
-  margin:12px 14px;
-  background:var(--card);border:1px solid var(--border);border-radius:12px;
-  overflow:hidden;
+.ts-track{
+  display:flex;transition:transform .4s cubic-bezier(.25,.8,.25,1);
 }
-.sentiment-head{
-  padding:11px 14px;font-size:12px;font-weight:700;color:var(--gold);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:6px;
+.ts-card{
+  min-width:100%;flex-shrink:0;padding:0 14px;
 }
-.sentiment-head .dot-live{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-.sc-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:10px 14px;border-bottom:1px solid var(--divider);font-size:13px;
+.ts-inner{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:16px;overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
 }
-.sc-row:last-child{border-bottom:none}
-.sc-lbl{color:var(--text2)}
-
-.post{
-  background:var(--card);margin:0 0 1px;
-  padding:14px;border-bottom:1px solid var(--divider);
-}
-.post-top{display:flex;align-items:center;gap:9px;margin-bottom:10px}
-.ava{
-  width:34px;height:34px;border-radius:50%;flex-shrink:0;
+.ts-top{display:flex;gap:13px;align-items:flex-start;margin-bottom:10px}
+.ts-av{
+  width:52px;height:52px;border-radius:14px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  font-size:13px;font-weight:700;color:#fff;
+  font-size:20px;font-weight:700;color:#fff;
+  box-shadow:0 2px 10px rgba(0,0,0,.12);
 }
+.ts-info{flex:1;min-width:0}
+.ts-name{font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px}
+.ts-title{font-size:12px;color:var(--text2);line-height:1.45;margin-bottom:8px}
+.ts-stats{display:flex;gap:14px}
+.ts-stat-val{font-size:14px;font-weight:700;color:var(--text)}
+.ts-stat-lbl{font-size:10px;color:var(--muted);margin-top:1px}
+.ts-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px}
+.ts-tag{font-size:11px;color:var(--gold);background:var(--gold-pale);border:1px solid var(--gold-light);border-radius:10px;padding:2px 10px}
+.ts-bio{font-size:12.5px;color:var(--text2);line-height:1.6}
+.ts-nav{
+  display:flex;justify-content:center;gap:6px;padding:12px 0 0;
+}
+.ts-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--border);
+  transition:all .3s;cursor:pointer;
+}
+.ts-dot.active{width:22px;border-radius:4px;background:var(--gold)}
+.ts-arrows{
+  display:flex;justify-content:center;gap:16px;padding:4px 0 0;
+}
+.ts-arrow{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--gold-pale);border:1px solid var(--gold-light);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.ts-arrow:active{background:var(--gold-light)}
+.ts-arrow svg{width:14px;height:14px;stroke:var(--gold);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* 联动内容区 */
+.forum-content{padding:0 0 24px;background:var(--bg)}
+.forum-sec{
+  padding:16px 14px 10px;display:flex;align-items:center;justify-content:space-between;
+}
+.forum-sec-lbl{
+  font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:7px;
+}
+.forum-sec-lbl::before{content:'';width:3px;height:16px;background:var(--gold);border-radius:2px;flex-shrink:0}
+.forum-sec-more{font-size:12px;color:var(--gold);cursor:pointer}
+
+/* 圈子卡片 */
+.fc-circle{
+  margin:0 14px;background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:14px;cursor:pointer;
+  display:flex;gap:13px;align-items:flex-start;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);
+  transition:transform .2s;
+}
+.fc-circle:active{transform:scale(.97);background:var(--card2)}
+.fc-ci{
+  width:48px;height:48px;border-radius:13px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.fc-ci svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.fc-info{flex:1;min-width:0}
+.fc-cn{font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px}
+.fc-cd{font-size:12px;color:var(--text2);line-height:1.55;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fc-cm{display:flex;gap:14px;font-size:11px;color:var(--muted)}
+.fc-cm strong{color:var(--text2);font-weight:600}
+.fc-ca{
+  flex-shrink:0;width:28px;height:28px;border-radius:50%;
+  background:var(--gold-pale);border:1px solid var(--gold-light);
+  display:flex;align-items:center;justify-content:center;margin-top:8px;
+}
+.fc-ca svg{width:13px;height:13px;stroke:var(--gold);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* 课程 & 直播 双列 */
+.fl-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px}
+.fl-card{background:var(--card);border-radius:12px;overflow:hidden;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.fl-card:active{opacity:.85}
+.fl-thumb{
+  position:relative;width:100%;aspect-ratio:16/9;
+  display:flex;align-items:flex-start;padding:10px;overflow:hidden;
+}
+.fl-thumb-lbl{font-size:11px;font-weight:800;color:rgba(255,220,100,.95);line-height:1.3;text-shadow:0 1px 4px rgba(0,0,0,.3)}
+.fl-badge{position:absolute;top:7px;left:7px;font-size:10px;font-weight:600;color:#fff;background:rgba(20,20,20,.6);border-radius:4px;padding:2px 7px}
+.fl-badge.on{background:rgba(200,30,30,.82)}
+.fl-ftime{position:absolute;bottom:7px;right:7px;font-size:10px;color:#fff;background:rgba(0,0,0,.55);border-radius:4px;padding:2px 6px}
+.fl-info{padding:8px 9px 10px}
+.fl-title{font-size:12.5px;font-weight:600;color:var(--text);line-height:1.35;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fl-viewers{font-size:11px;color:var(--muted);margin-bottom:5px}
+.fl-price{font-size:14px;font-weight:700;color:var(--red)}
+.fl-price .orig{font-size:11px;color:var(--muted);text-decoration:line-through;margin-left:4px;font-weight:400}
+.fl-price.free{color:var(--gold)}
+
+/* 帖子通用样式（圈子详情页使用） */
+.post{background:var(--card);padding:14px;border-bottom:1px solid var(--divider)}
+.post-top{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.ava{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff}
 .uname{font-size:13px;font-weight:600;color:var(--text)}
 .ptime{font-size:11px;color:var(--muted);margin-top:1px}
-.pbadge{
-  margin-left:auto;font-size:10px;padding:3px 9px;
-  border-radius:9px;font-weight:600;white-space:nowrap;
-}
-.post-title{font-size:14px;font-weight:700;line-height:1.45;color:var(--text);margin-bottom:6px}
-.post-body{
-  font-size:12.5px;color:var(--text2);line-height:1.55;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-}
+.pbadge{margin-left:auto;font-size:10px;padding:3px 9px;border-radius:9px;font-weight:600;white-space:nowrap}
+.post-title{font-size:14px;font-weight:700;line-height:1.45;color:var(--text)}
 .post-foot{display:flex;gap:14px;margin-top:11px;align-items:center}
 .pact{display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--muted)}
 .pact svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .pshare{margin-left:auto;font-size:12px;color:var(--gold)}
 
-.fab-wrap{display:flex;justify-content:flex-end;padding:16px 14px 8px;background:var(--bg)}
-.fab{
-  width:44px;height:44px;border-radius:50%;
-  background:var(--gold2);
-  display:flex;align-items:center;justify-content:center;cursor:pointer;
-  box-shadow:0 4px 14px rgba(200,134,10,.3);
-}
-.fab svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-
-/* ── 圈子列表 ── */
-.forum-head{padding:14px 14px 10px;background:var(--card);border-bottom:1px solid var(--border)}
-.forum-head-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px}
-.forum-head-sub{font-size:11px;color:var(--muted)}
-.circle-list{display:flex;flex-direction:column;gap:0}
-.circle-card{
-  background:var(--card);border-bottom:1px solid var(--border);
-  padding:16px 14px;cursor:pointer;display:flex;gap:13px;align-items:flex-start;
-}
-.circle-card:active{background:var(--card2)}
-.circle-icon{
-  width:52px;height:52px;border-radius:14px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-}
-.circle-icon svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.circle-info{flex:1;min-width:0}
-.circle-name{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px}
-.circle-desc{font-size:12px;color:var(--text2);line-height:1.5;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.circle-meta{display:flex;gap:14px;margin-top:8px}
-.circle-meta span{font-size:11px;color:var(--muted)}
-.circle-meta strong{color:var(--text2);font-weight:600}
-.circle-arrow{
-  flex-shrink:0;width:28px;height:28px;border-radius:50%;
-  background:var(--gold-pale);border:1px solid var(--gold-light);
-  display:flex;align-items:center;justify-content:center;margin-top:10px;
-}
-.circle-arrow svg{width:14px;height:14px;stroke:var(--gold);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-
 /* ── 圈子详情页 ── */
 #page-circle{background:var(--bg)}
 .circle-banner{
-  padding:20px 16px 18px;
+  padding:22px 16px 20px;
   display:flex;flex-direction:column;align-items:center;text-align:center;
 }
 .circle-banner-icon{
-  width:64px;height:64px;border-radius:18px;
-  display:flex;align-items:center;justify-content:center;margin-bottom:11px;
+  width:68px;height:68px;border-radius:20px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:12px;
 }
-.circle-banner-icon svg{width:32px;height:32px;stroke:#fff;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.circle-banner-name{font-size:18px;font-weight:700;color:var(--text);margin-bottom:5px}
+.circle-banner-icon svg{width:34px;height:34px;stroke:#fff;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.circle-banner-name{font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px}
 .circle-banner-desc{font-size:13px;color:var(--text2);line-height:1.55;max-width:280px}
-.circle-stats{display:flex;justify-content:center;gap:32px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);width:100%}
+.circle-stats{display:flex;justify-content:center;gap:32px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);width:100%}
 .cstat{text-align:center}
 .cstat-val{font-size:16px;font-weight:700;color:var(--text)}
 .cstat-lbl{font-size:11px;color:var(--muted);margin-top:2px}
 .join-btn{
-  margin-top:14px;
+  margin-top:16px;
   background:var(--gold2);color:#fff;font-size:14px;font-weight:600;
-  border:none;border-radius:22px;padding:10px 36px;cursor:pointer;
+  border:none;border-radius:22px;padding:10px 38px;cursor:pointer;
 }
 
 /* 圈主卡片 */
@@ -372,20 +390,94 @@ body{
 }
 .owner-body{display:flex;gap:12px;padding:14px;align-items:flex-start}
 .owner-av{
-  width:44px;height:44px;border-radius:50%;flex-shrink:0;
+  width:46px;height:46px;border-radius:50%;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  font-size:16px;font-weight:700;color:#fff;
+  font-size:17px;font-weight:700;color:#fff;
 }
-.owner-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px}
+.owner-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
 .owner-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;background:var(--gold-pale);color:var(--gold);border:1px solid var(--gold-light);margin-bottom:6px}
 .owner-bio{font-size:12px;color:var(--text2);line-height:1.55}
 
-/* 帖子区（复用 post 样式，加个分区标题）*/
+/* 帖子区 */
 .posts-section-head{
   padding:14px 14px 10px;font-size:13px;font-weight:700;color:var(--text);
   display:flex;justify-content:space-between;align-items:center;
 }
 .posts-section-head span{font-size:12px;color:var(--gold)}
+
+/* ══════ 首页 HOME ══════ */
+.home-search{background:var(--card);padding:10px 14px 11px;border-bottom:1px solid var(--border);flex-shrink:0}
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--bg2);border-radius:22px;padding:9px 14px;cursor:pointer}
+.search-bar svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0}
+.search-bar span{font-size:14px;color:var(--muted)}
+.search-hint{display:flex;align-items:center;gap:6px;margin-top:8px}
+.search-hint .hl{font-size:12px;color:var(--muted)}
+.stag{font-size:12px;color:var(--gold);background:var(--gold-pale);border:1px solid var(--gold-light);border-radius:12px;padding:3px 10px}
+
+.home-banner{background:linear-gradient(120deg,#B86800 0%,#D4900C 30%,#EAA822 65%,#C47808 100%);padding:20px 20px 18px;position:relative;overflow:hidden;cursor:pointer}
+.home-banner::before{content:'';position:absolute;right:-24px;top:-24px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.06)}
+.home-banner::after{content:'';position:absolute;right:24px;bottom:-36px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.05)}
+.hb-logo{font-size:10px;font-weight:800;color:rgba(255,255,255,.9);background:rgba(255,255,255,.18);border-radius:4px;padding:2px 8px;display:inline-block;margin-bottom:10px}
+.hb-h1{font-size:25px;font-weight:900;color:#fff;line-height:1.28;margin-bottom:16px;text-shadow:0 1px 8px rgba(0,0,0,.18)}
+.hb-cta{display:inline-flex;align-items:center;gap:5px;border:1.5px solid rgba(255,255,255,.6);border-radius:20px;padding:7px 18px;font-size:13px;color:#fff;background:rgba(255,255,255,.15)}
+
+.hot-title{text-align:center;padding:15px 0 5px;font-size:15px;font-weight:700;color:#6B4A20;letter-spacing:4px;background:var(--bg)}
+.sec-pad{padding:0 12px}
+
+/* ── 直播双列 ── */
+.live-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 12px 12px}
+.lcard{background:var(--card);border-radius:12px;overflow:hidden;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.lcard:active{opacity:.82}
+.lthumb{position:relative;width:100%;aspect-ratio:16/10;overflow:hidden;display:block}
+.lthumb svg{display:block;width:100%;height:100%}
+.lbadge{position:absolute;top:7px;left:7px;font-size:10px;font-weight:600;color:#fff;background:rgba(20,20,20,.6);border-radius:4px;padding:2px 7px;display:flex;align-items:center;gap:3px;backdrop-filter:blur(2px)}
+.lbadge.on{background:rgba(200,30,30,.82)}
+.ltime{position:absolute;bottom:7px;right:7px;font-size:10px;color:#fff;background:rgba(0,0,0,.55);border-radius:4px;padding:2px 6px}
+.linfo{padding:8px 9px 10px}
+.ltitle{font-size:13px;font-weight:600;color:var(--text);line-height:1.35;margin-bottom:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lview{font-size:11px;color:var(--muted);margin-bottom:5px}
+.lprice{font-size:14px;font-weight:700;color:var(--red)}
+.lprice .orig{font-size:11px;color:var(--muted);text-decoration:line-through;margin-left:4px;font-weight:400}
+.lprice.free{color:var(--gold)}
+
+/* ── 报告研读 ── */
+.report-list{display:flex;flex-direction:column;gap:8px;padding:0 12px 6px}
+.rcard{background:var(--card);border-radius:12px;overflow:hidden;display:flex;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.rcard:active{opacity:.82}
+.rcover{width:96px;flex-shrink:0;position:relative;overflow:hidden}
+.rcover svg{display:block;width:100%;height:100%}
+.rdecode{position:absolute;top:6px;left:6px;font-size:9px;font-weight:700;color:#fff;background:rgba(120,80,20,.75);border-radius:3px;padding:1px 6px}
+.rinfo{flex:1;padding:13px 12px 13px 10px;display:flex;flex-direction:column;justify-content:space-between}
+.rname{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px}
+.rsold{font-size:11px;color:var(--muted);margin-bottom:8px}
+.rfoot{display:flex;align-items:center;justify-content:space-between}
+.rprice{font-size:16px;font-weight:700;color:var(--red)}
+.rprice .orig{font-size:11px;color:var(--muted);text-decoration:line-through;margin-left:4px;font-weight:400}
+.rcart{width:34px;height:34px;border-radius:8px;background:var(--gold2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rcart svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
+
+/* ── 课程 tabs ── */
+.ctab-wrap{background:var(--card);border-radius:12px;overflow:hidden;margin:4px 12px 0;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.ctabs{display:flex;border-bottom:1px solid var(--border)}
+.ctab{flex:1;text-align:center;padding:11px 0;font-size:14px;color:var(--muted);cursor:pointer;position:relative}
+.ctab.active{color:var(--gold);font-weight:700}
+.ctab.active::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:22px;height:2px;background:var(--gold);border-radius:1px}
+.cstabs{display:flex;gap:6px;padding:8px 12px}
+.cstab{font-size:12px;color:var(--muted);padding:4px 12px;border-radius:12px;cursor:pointer;border:1px solid transparent}
+.cstab.active{background:var(--gold-pale);color:var(--gold);font-weight:600;border-color:var(--gold-light)}
+
+/* ── 推广 banner ── */
+.promo{margin:8px 12px 10px;border-radius:14px;overflow:hidden;cursor:pointer;position:relative}
+.promo svg{display:block;width:100%;height:auto}
+
+/* ── 课程双列 ── */
+.course-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 12px 20px}
+.ccard{background:var(--card);border-radius:12px;overflow:hidden;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.ccard:active{opacity:.82}
+.cthumb{display:block;width:100%;aspect-ratio:4/3;overflow:hidden}
+.cthumb svg{display:block;width:100%;height:100%}
+.ctitle{font-size:13px;font-weight:600;color:var(--text);padding:8px 9px 10px;line-height:1.35}
+
 </style>
 </head>
 <body>
@@ -395,15 +487,426 @@ body{
   <div class="icon-btn" id="leftBtn" onclick="handleLeft()">
     <svg id="leftBtnIcon" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </div>
-  <div class="title" id="barTitle">金融大盘</div>
+  <div class="title" id="barTitle">首页</div>
   <div class="icon-btn"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
 </div>
 
 <!-- PAGES -->
 <div class="pages">
 
+<!-- ══════ PAGE 0 首页 ══════ -->
+<div class="page active" id="page-home">
+
+  <!-- 搜索栏 -->
+  <div class="home-search">
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>搜索课程、直播、老师…</span>
+    </div>
+    <div class="search-hint">
+      <span class="hl">猜你想搜：</span>
+      <span class="stag">最近直播</span>
+      <span class="stag">精品课</span>
+    </div>
+  </div>
+
+  <!-- 主 Banner -->
+  <div class="home-banner">
+    <div class="hb-logo">财富增长课</div>
+    <div class="hb-h1">人生要滚的<br>两个"雪球"</div>
+    <div class="hb-cta">立即收听 &gt;</div>
+    <!-- 天平装饰 SVG -->
+    <svg style="position:absolute;right:0;bottom:0;width:130px;height:100%;opacity:.22" viewBox="0 0 130 100" preserveAspectRatio="xMaxYMax meet">
+      <line x1="65" y1="10" x2="65" y2="80" stroke="#fff" stroke-width="2"/>
+      <line x1="20" y1="30" x2="110" y2="30" stroke="#fff" stroke-width="2"/>
+      <circle cx="65" cy="10" r="4" fill="#fff"/>
+      <rect x="10" y="26" width="30" height="20" rx="4" fill="rgba(255,255,255,.3)"/>
+      <rect x="90" y="30" width="30" height="16" rx="4" fill="rgba(255,255,255,.3)"/>
+      <rect x="60" y="78" width="10" height="16" fill="rgba(255,255,255,.25)" rx="2"/>
+      <rect x="50" y="92" width="30" height="5" fill="rgba(255,255,255,.2)" rx="2"/>
+    </svg>
+  </div>
+
+  <!-- 热门直播 -->
+  <div class="hot-title">- 热门直播 -</div>
+  <div class="sec-head sec-pad" style="margin-top:4px"><h2>直播</h2><a>查看更多 ›</a></div>
+
+  <div class="live-grid">
+
+    <!-- ① 财富增长课 -->
+    <div class="lcard">
+      <div class="lthumb">
+        <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="lc1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#9A5500"/><stop offset="50%" stop-color="#C87808"/><stop offset="100%" stop-color="#E0980A"/></linearGradient>
+          </defs>
+          <rect width="160" height="100" fill="url(#lc1)"/>
+          <!-- K线图背景 -->
+          <g opacity=".25" fill="#fff">
+            <rect x="4" y="52" width="4" height="34" rx="1"/><rect x="4" y="48" width="4" height="6" rx="1"/>
+            <rect x="11" y="38" width="4" height="48" rx="1"/><rect x="11" y="34" width="4" height="6" rx="1"/>
+            <rect x="18" y="44" width="4" height="42" rx="1"/>
+            <rect x="25" y="30" width="4" height="56" rx="1"/><rect x="25" y="26" width="4" height="6" rx="1"/>
+            <rect x="32" y="40" width="4" height="46" rx="1"/>
+            <rect x="39" y="22" width="4" height="64" rx="1"/><rect x="39" y="18" width="4" height="6" rx="1"/>
+            <rect x="46" y="35" width="4" height="51" rx="1"/>
+          </g>
+          <!-- 城市剪影 -->
+          <g opacity=".1" fill="#fff">
+            <rect x="60" y="55" width="10" height="35"/><rect x="72" y="48" width="8" height="42"/>
+            <rect x="82" y="60" width="12" height="30"/><rect x="96" y="40" width="8" height="50"/>
+            <rect x="106" y="52" width="10" height="38"/><rect x="118" y="35" width="8" height="55"/>
+          </g>
+          <!-- 文字区 -->
+          <text x="8" y="22" font-size="11" font-weight="800" fill="#FFE066" font-family="'PingFang SC',sans-serif">金牌投资讲师</text>
+          <text x="8" y="34" font-size="7.5" fill="rgba(255,255,255,.85)" font-family="'PingFang SC',sans-serif">为您量身定制投资理财产品</text>
+          <!-- 人物轮廓 (女，白衬衫) -->
+          <ellipse cx="132" cy="28" rx="13" ry="16" fill="rgba(255,235,200,.45)"/>
+          <path d="M115,100 Q119,60 132,55 Q145,60 149,100Z" fill="rgba(240,240,240,.35)"/>
+          <rect x="120" y="60" width="24" height="30" rx="4" fill="rgba(255,255,255,.22)"/>
+          <!-- 胸章 -->
+          <text x="8" y="80" font-size="7" fill="rgba(255,255,255,.7)" font-family="'PingFang SC',sans-serif">易小秀  资深投资理财专家</text>
+          <text x="8" y="90" font-size="6.5" fill="rgba(255,255,255,.55)" font-family="'PingFang SC',sans-serif">课程预约 06/16 18:00</text>
+        </svg>
+        <div class="lbadge"><svg viewBox="0 0 12 12" width="10" height="10"><rect x="1" y="1" width="10" height="10" rx="2" fill="none" stroke="#fff" stroke-width="1.2"/><polygon points="5,3.5 5,8.5 9,6" fill="#fff"/></svg>回放</div>
+        <div class="ltime">04-23 15:00</div>
+      </div>
+      <div class="linfo">
+        <div class="ltitle">财富增长课</div>
+        <div class="lview">54人观看</div>
+        <div class="lprice">¥198.00<span class="orig">¥399</span></div>
+      </div>
+    </div>
+
+    <!-- ② 投资策略分享 -->
+    <div class="lcard">
+      <div class="lthumb">
+        <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="lc2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0D1E42"/><stop offset="100%" stop-color="#1A3870"/></linearGradient>
+          </defs>
+          <rect width="160" height="100" fill="url(#lc2)"/>
+          <!-- 格线 -->
+          <line x1="0" y1="25" x2="160" y2="25" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+          <line x1="0" y1="50" x2="160" y2="50" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+          <line x1="0" y1="75" x2="160" y2="75" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+          <!-- 折线图 -->
+          <polyline points="0,70 20,62 40,55 60,48 80,40 100,44 120,32 140,22 160,18" fill="none" stroke="rgba(100,180,255,.6)" stroke-width="1.5"/>
+          <polyline points="0,80 20,75 40,72 60,68 80,60 100,55 120,50 140,42 160,38" fill="none" stroke="rgba(255,180,50,.45)" stroke-width="1.2"/>
+          <!-- 主文字 -->
+          <text x="8" y="20" font-size="10.5" font-weight="800" fill="#fff" font-family="'PingFang SC',sans-serif">看懂市场趋势</text>
+          <text x="8" y="34" font-size="10.5" font-weight="800" fill="#fff" font-family="'PingFang SC',sans-serif">把握投资机会</text>
+          <!-- 人物轮廓 (男，深色西装) -->
+          <ellipse cx="132" cy="30" rx="13" ry="15" fill="rgba(200,210,230,.35)"/>
+          <path d="M116,100 Q120,58 132,54 Q144,58 148,100Z" fill="rgba(20,30,60,.55)"/>
+          <!-- 眼镜细节 -->
+          <rect x="124" y="28" width="7" height="4" rx="2" fill="none" stroke="rgba(255,255,255,.4)" stroke-width=".8"/>
+          <rect x="133" y="28" width="7" height="4" rx="2" fill="none" stroke="rgba(255,255,255,.4)" stroke-width=".8"/>
+          <line x1="131" y1="30" x2="133" y2="30" stroke="rgba(255,255,255,.4)" stroke-width=".8"/>
+          <!-- 小字 -->
+          <text x="8" y="85" font-size="6.5" fill="rgba(255,255,255,.55)" font-family="'PingFang SC',sans-serif">大咖在线解析 · 实战策略分享</text>
+        </svg>
+        <div class="lbadge"><svg viewBox="0 0 12 12" width="10" height="10"><rect x="1" y="1" width="10" height="10" rx="2" fill="none" stroke="#fff" stroke-width="1.2"/><polygon points="5,3.5 5,8.5 9,6" fill="#fff"/></svg>回放</div>
+        <div class="ltime">04-14 10:00</div>
+      </div>
+      <div class="linfo">
+        <div class="ltitle">投资策略分享</div>
+        <div class="lview">9人观看</div>
+        <div class="lprice">¥199.00<span class="orig">¥499</span></div>
+      </div>
+    </div>
+
+    <!-- ③ 实时答疑直播间 -->
+    <div class="lcard">
+      <div class="lthumb">
+        <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="lc3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0A0A18"/><stop offset="100%" stop-color="#181828"/></linearGradient>
+          </defs>
+          <rect width="160" height="100" fill="url(#lc3)"/>
+          <!-- 渐变光晕 -->
+          <radialGradient id="lc3g" cx="50%" cy="50%" r="60%"><stop offset="0%" stop-color="#C83020" stop-opacity=".25"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+          <rect width="160" height="100" fill="url(#lc3g)"/>
+          <!-- 主文字 -->
+          <text x="8" y="24" font-size="13" font-weight="900" fill="#FF5040" font-family="'PingFang SC',sans-serif">金融直播</text>
+          <text x="8" y="40" font-size="13" font-weight="900" fill="#FF8020" font-family="'PingFang SC',sans-serif">实时答疑</text>
+          <!-- 小字 -->
+          <text x="8" y="54" font-size="6.5" fill="rgba(255,255,255,.6)" font-family="'PingFang SC',sans-serif">掌握市场动态 把握投资机会</text>
+          <!-- 立即学习按钮 -->
+          <rect x="8" y="60" width="48" height="14" rx="7" fill="#FF6020"/>
+          <text x="14" y="70" font-size="7" fill="#fff" font-weight="700" font-family="'PingFang SC',sans-serif">立即学习 ▶</text>
+          <!-- 人物轮廓 (女，黑西装) -->
+          <ellipse cx="130" cy="30" rx="14" ry="17" fill="rgba(220,210,200,.3)"/>
+          <path d="M113,100 Q118,56 130,52 Q142,56 147,100Z" fill="rgba(10,10,20,.7)"/>
+          <line x1="122" y1="58" x2="122" y2="80" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+          <line x1="138" y1="58" x2="138" y2="80" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+        </svg>
+        <div class="lbadge"><svg viewBox="0 0 12 12" width="10" height="10"><rect x="1" y="1" width="10" height="10" rx="2" fill="none" stroke="#fff" stroke-width="1.2"/><polygon points="5,3.5 5,8.5 9,6" fill="#fff"/></svg>回放</div>
+        <div class="ltime">03-23 17:00</div>
+      </div>
+      <div class="linfo">
+        <div class="ltitle">实时答疑直播间</div>
+        <div class="lview">34人观看</div>
+        <div class="lprice">¥199.00<span class="orig">¥599</span></div>
+      </div>
+    </div>
+
+    <!-- ④ 第五次财富论坛 -->
+    <div class="lcard">
+      <div class="lthumb">
+        <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="lc4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3A0808"/><stop offset="100%" stop-color="#700A0A"/></linearGradient>
+          </defs>
+          <rect width="160" height="100" fill="url(#lc4)"/>
+          <!-- 背景装饰线 -->
+          <line x1="0" y1="0" x2="160" y2="100" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+          <line x1="80" y1="0" x2="160" y2="60" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+          <!-- 头图小字 -->
+          <text x="6" y="14" font-size="6.5" fill="rgba(255,255,255,.55)" font-family="'PingFang SC',sans-serif">第五次财富论坛直播专场</text>
+          <text x="6" y="23" font-size="6.5" fill="rgba(255,255,255,.55)" font-family="'PingFang SC',sans-serif">教你实现财富自由</text>
+          <!-- 主讲人标签 -->
+          <rect x="6" y="28" width="60" height="12" rx="3" fill="rgba(255,200,0,.15)" stroke="rgba(255,200,0,.3)" stroke-width=".5"/>
+          <text x="10" y="37" font-size="7" fill="#FFD700" font-family="'PingFang SC',sans-serif">「金牌讲师」李嘉豪</text>
+          <!-- 王者必修 -->
+          <rect x="65" y="20" width="50" height="36" rx="4" fill="rgba(180,20,20,.5)" stroke="rgba(255,200,0,.4)" stroke-width="1"/>
+          <text x="72" y="36" font-size="11" font-weight="900" fill="#FFD700" font-family="'PingFang SC',sans-serif">王者</text>
+          <text x="72" y="50" font-size="11" font-weight="900" fill="#fff" font-family="'PingFang SC',sans-serif">必修</text>
+          <!-- 人物轮廓 (男，西装) -->
+          <ellipse cx="130" cy="35" rx="12" ry="14" fill="rgba(200,190,180,.3)"/>
+          <path d="M116,100 Q120,58 130,54 Q140,58 144,100Z" fill="rgba(20,15,10,.6)"/>
+          <!-- 时间行 -->
+          <text x="6" y="88" font-size="6.5" fill="rgba(255,255,255,.5)" font-family="'PingFang SC',sans-serif">20:30-22:00</text>
+        </svg>
+        <div class="lbadge on">
+          <svg viewBox="0 0 12 12" width="9" height="9"><circle cx="6" cy="6" r="3" fill="#fff"/></svg>直播中
+        </div>
+        <div class="ltime">01-30 17:00</div>
+      </div>
+      <div class="linfo">
+        <div class="ltitle">第五次财富论坛分享会</div>
+        <div class="lview">35人观看</div>
+        <div class="lprice free">免费</div>
+      </div>
+    </div>
+
+  </div><!-- /live-grid -->
+
+  <!-- 报告研读 -->
+  <div class="hot-title">- 报告研读 -</div>
+  <div class="report-list">
+
+    <!-- 书1：创业者思维 (彼得·林奇 One Up On Wall Street) -->
+    <div class="rcard">
+      <div class="rcover" style="height:110px">
+        <svg viewBox="0 0 96 110" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bk1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1A2E5A"/><stop offset="100%" stop-color="#0D1A38"/></linearGradient>
+          </defs>
+          <rect width="96" height="110" fill="url(#bk1)"/>
+          <!-- 书脊阴影 -->
+          <rect x="0" y="0" width="6" height="110" fill="rgba(0,0,0,.3)"/>
+          <!-- 白色装饰带 -->
+          <rect x="6" y="0" width="90" height="22" fill="rgba(255,255,255,.08)"/>
+          <!-- 标题英文 -->
+          <text x="10" y="11" font-size="7.5" font-weight="700" fill="rgba(255,255,255,.9)" font-family="Georgia,serif">ONE UP</text>
+          <text x="10" y="20" font-size="7.5" font-weight="700" fill="rgba(255,255,255,.9)" font-family="Georgia,serif">ON WALL STREET</text>
+          <!-- 分割线 -->
+          <line x1="6" y1="23" x2="96" y2="23" stroke="rgba(255,200,50,.5)" stroke-width="1"/>
+          <!-- 人物 (老者侧面半身) -->
+          <ellipse cx="52" cy="50" rx="18" ry="22" fill="rgba(200,185,165,.35)"/>
+          <path d="M34,80 Q38,60 52,56 Q66,60 70,80 L70,100 L34,100Z" fill="rgba(60,80,120,.55)"/>
+          <!-- 领带 -->
+          <polygon points="50,62 54,62 52,80" fill="rgba(180,30,30,.6)"/>
+          <!-- 手 (交叉) -->
+          <path d="M34,80 Q44,75 52,78 Q60,75 70,80" fill="none" stroke="rgba(200,185,165,.35)" stroke-width="4"/>
+          <!-- 中文副标题 -->
+          <text x="10" y="93" font-size="7" fill="rgba(255,220,100,.9)" font-family="'PingFang SC',sans-serif">彼得·林奇的成功投资</text>
+          <text x="10" y="103" font-size="6" fill="rgba(255,255,255,.55)" font-family="'PingFang SC',sans-serif">齐俊杰·解读</text>
+        </svg>
+        <div class="rdecode">解读</div>
+      </div>
+      <div class="rinfo">
+        <div>
+          <div class="rname">创业者思维</div>
+          <div class="rsold">已售 1</div>
+        </div>
+        <div class="rfoot">
+          <div class="rprice">¥1080<span class="orig">¥2999</span></div>
+          <div class="rcart"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 书2：财富密码 (邓普顿 Contrarian Investment Strategies) -->
+    <div class="rcard">
+      <div class="rcover" style="height:110px">
+        <svg viewBox="0 0 96 110" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bk2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#14283C"/><stop offset="100%" stop-color="#0A1828"/></linearGradient>
+          </defs>
+          <rect width="96" height="110" fill="url(#bk2)"/>
+          <rect x="0" y="0" width="6" height="110" fill="rgba(0,0,0,.3)"/>
+          <!-- 封面装饰 -->
+          <rect x="6" y="6" width="84" height="50" fill="rgba(255,255,255,.04)" rx="2"/>
+          <!-- 标题 -->
+          <text x="10" y="18" font-size="6.5" font-weight="700" fill="rgba(255,255,255,.85)" font-family="Georgia,serif">CONTRARIAN</text>
+          <text x="10" y="27" font-size="6.5" font-weight="700" fill="rgba(255,255,255,.85)" font-family="Georgia,serif">INVESTMENT</text>
+          <text x="10" y="36" font-size="6.5" font-weight="700" fill="rgba(255,255,255,.85)" font-family="Georgia,serif">STRATEGIES:</text>
+          <text x="10" y="45" font-size="5.5" fill="rgba(255,255,255,.55)" font-family="Georgia,serif">The Psychological Edge</text>
+          <!-- 分割装饰 -->
+          <line x1="6" y1="58" x2="90" y2="58" stroke="rgba(100,160,255,.4)" stroke-width="1"/>
+          <!-- 人物 (正面半身) -->
+          <ellipse cx="52" cy="74" rx="16" ry="18" fill="rgba(190,175,155,.3)"/>
+          <path d="M36,100 Q40,70 52,66 Q64,70 68,100Z" fill="rgba(30,50,90,.5)"/>
+          <!-- 领结 -->
+          <polygon points="48,72 56,72 52,78" fill="rgba(0,60,160,.55)"/>
+          <!-- 副标题 -->
+          <text x="10" y="93" font-size="7" fill="rgba(255,220,100,.9)" font-family="'PingFang SC',sans-serif">邓普顿教你逆向投资</text>
+          <text x="10" y="103" font-size="6" fill="rgba(255,255,255,.5)" font-family="'PingFang SC',sans-serif">齐俊杰·解读</text>
+        </svg>
+        <div class="rdecode">解读</div>
+      </div>
+      <div class="rinfo">
+        <div>
+          <div class="rname">财富密码</div>
+          <div class="rsold">已售 3</div>
+        </div>
+        <div class="rfoot">
+          <div class="rprice">¥1080<span class="orig">¥2999</span></div>
+          <div class="rcart"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /report-list -->
+
+  <!-- 课程 Tabs -->
+  <div class="ctab-wrap">
+    <div class="ctabs">
+      <div class="ctab active" onclick="switchCtab(this)">课程</div>
+      <div class="ctab" onclick="switchCtab(this)">训练营</div>
+      <div class="ctab" onclick="switchCtab(this)">研报</div>
+    </div>
+    <div class="cstabs">
+      <div class="cstab active" onclick="switchCstab(this)">精品</div>
+      <div class="cstab" onclick="switchCstab(this)">专项</div>
+      <div class="cstab" onclick="switchCstab(this)">最热</div>
+    </div>
+  </div>
+
+  <!-- 推广 Banner (创始人心力提升计划，绿色山脉风) -->
+  <div class="promo">
+    <svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;border-radius:14px">
+      <defs>
+        <linearGradient id="pb1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0B3D2E"/><stop offset="50%" stop-color="#155E42"/><stop offset="100%" stop-color="#0D4835"/></linearGradient>
+        <linearGradient id="pb2" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#A06820"/><stop offset="60%" stop-color="#E8A030"/><stop offset="100%" stop-color="#FFD060"/></linearGradient>
+      </defs>
+      <rect width="360" height="140" fill="url(#pb1)"/>
+      <!-- 山脉层叠 -->
+      <path d="M0,100 Q60,40 120,70 Q180,100 240,50 Q300,0 360,60 L360,140 L0,140Z" fill="rgba(20,90,60,.6)"/>
+      <path d="M0,115 Q80,70 160,90 Q240,110 360,75 L360,140 L0,140Z" fill="rgba(15,70,45,.7)"/>
+      <path d="M0,128 Q90,108 180,118 Q270,128 360,110 L360,140 L0,140Z" fill="rgba(10,50,35,.8)"/>
+      <!-- 夕阳光晕 -->
+      <radialGradient id="sun" cx="70%" cy="50%" r="35%"><stop offset="0%" stop-color="#FFB030" stop-opacity=".5"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+      <rect width="360" height="140" fill="url(#sun)"/>
+      <!-- 光道 -->
+      <path d="M252,0 L200,140 L290,140Z" fill="rgba(255,200,80,.06)"/>
+      <!-- 小人 -->
+      <g transform="translate(170,95)" opacity=".7">
+        <ellipse cx="0" cy="-12" rx="4" ry="5" fill="rgba(255,200,150,.6)"/>
+        <line x1="0" y1="-7" x2="0" y2="8" stroke="rgba(255,200,150,.5)" stroke-width="2"/>
+        <line x1="-6" y1="-2" x2="6" y2="-2" stroke="rgba(255,200,150,.5)" stroke-width="1.5"/>
+        <line x1="0" y1="8" x2="-4" y2="18" stroke="rgba(255,200,150,.5)" stroke-width="1.5"/>
+        <line x1="0" y1="8" x2="4" y2="18" stroke="rgba(255,200,150,.5)" stroke-width="1.5"/>
+      </g>
+      <!-- 文字 -->
+      <text x="20" y="38" font-size="10" fill="rgba(255,255,255,.65)" letter-spacing="3" font-family="'PingFang SC',sans-serif">心智升维 幸福归位</text>
+      <text x="20" y="68" font-size="22" font-weight="900" fill="#fff" font-family="'PingFang SC',sans-serif">创始人心力</text>
+      <text x="20" y="94" font-size="22" font-weight="900" fill="#fff" font-family="'PingFang SC',sans-serif">提升计划</text>
+      <text x="20" y="128" font-size="9" fill="rgba(255,255,255,.5)" letter-spacing="2" font-family="Georgia,serif">FOUNDER</text>
+    </svg>
+  </div>
+
+  <!-- 课程双列 -->
+  <div class="course-grid">
+
+    <!-- 课程1：投资理财 (男，深蓝) -->
+    <div class="ccard">
+      <div class="cthumb">
+        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="cc1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#080E28"/><stop offset="100%" stop-color="#152050"/></linearGradient>
+          </defs>
+          <rect width="160" height="120" fill="url(#cc1)"/>
+          <!-- 光线放射 -->
+          <radialGradient id="cc1r" cx="30%" cy="80%" r="70%"><stop offset="0%" stop-color="#2040A0" stop-opacity=".4"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+          <rect width="160" height="120" fill="url(#cc1r)"/>
+          <!-- 人物 (年轻男，西装) -->
+          <ellipse cx="80" cy="42" rx="22" ry="26" fill="rgba(200,185,165,.38)"/>
+          <!-- 头发 -->
+          <ellipse cx="80" cy="26" rx="22" ry="10" fill="rgba(30,20,10,.7)"/>
+          <!-- 西装 -->
+          <path d="M54,90 Q58,68 80,62 Q102,68 106,90 L106,120 L54,120Z" fill="rgba(20,30,60,.8)"/>
+          <!-- 领带 -->
+          <polygon points="77,66 83,66 80,90" fill="rgba(40,80,200,.7)"/>
+          <!-- 衬衫 -->
+          <rect x="72" y="66" width="16" height="8" fill="rgba(240,240,240,.4)"/>
+          <!-- 千小兔 标签 -->
+          <rect x="6" y="90" width="55" height="14" rx="3" fill="rgba(255,255,255,.08)"/>
+          <text x="10" y="100" font-size="7" fill="rgba(255,255,255,.7)" font-family="'PingFang SC',sans-serif">千小兔 老师</text>
+          <!-- 文字 -->
+          <text x="8" y="16" font-size="10" font-weight="800" fill="#FFD060" font-family="'PingFang SC',sans-serif">投资理财</text>
+          <text x="8" y="112" font-size="7.5" font-weight="700" fill="#fff" font-family="'PingFang SC',sans-serif">只为提高您的收益</text>
+        </svg>
+      </div>
+      <div class="ctitle">投资理财</div>
+    </div>
+
+    <!-- 课程2：高小定精选小班课 (女，暖色) -->
+    <div class="ccard">
+      <div class="cthumb">
+        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="cc2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F0D8C0"/><stop offset="100%" stop-color="#D8B898"/></linearGradient>
+          </defs>
+          <rect width="160" height="120" fill="url(#cc2)"/>
+          <!-- 背景装饰 -->
+          <circle cx="130" cy="30" r="40" fill="rgba(255,255,255,.15)"/>
+          <!-- 人物 (女，眼镜，职业装) -->
+          <ellipse cx="100" cy="45" rx="20" ry="24" fill="rgba(220,185,155,.6)"/>
+          <!-- 头发 -->
+          <ellipse cx="100" cy="32" rx="20" ry="12" fill="rgba(40,25,10,.6)"/>
+          <rect x="80" y="32" width="6" height="20" rx="3" fill="rgba(40,25,10,.55)"/>
+          <rect x="114" y="32" width="6" height="20" rx="3" fill="rgba(40,25,10,.55)"/>
+          <!-- 眼镜 -->
+          <rect x="89" y="42" width="9" height="6" rx="3" fill="none" stroke="rgba(60,40,20,.7)" stroke-width="1.2"/>
+          <rect x="102" y="42" width="9" height="6" rx="3" fill="none" stroke="rgba(60,40,20,.7)" stroke-width="1.2"/>
+          <line x1="98" y1="45" x2="102" y2="45" stroke="rgba(60,40,20,.7)" stroke-width="1"/>
+          <!-- 职业服 -->
+          <path d="M78,90 Q82,68 100,63 Q118,68 122,90 L122,120 L78,120Z" fill="rgba(30,30,50,.55)"/>
+          <!-- 右手姿态 -->
+          <path d="M116,70 Q124,72 122,82" fill="none" stroke="rgba(220,185,155,.6)" stroke-width="5" stroke-linecap="round"/>
+          <!-- 文字内容 -->
+          <text x="8" y="15" font-size="9" font-weight="800" fill="#8B4000" font-family="'PingFang SC',sans-serif">高小定 ▶</text>
+          <rect x="6" y="20" width="55" height="1" fill="rgba(139,64,0,.25)"/>
+          <text x="8" y="35" font-size="6.5" fill="rgba(80,40,10,.8)" font-family="'PingFang SC',sans-serif">全心全意竭诚服务</text>
+          <text x="8" y="45" font-size="6.5" fill="rgba(80,40,10,.8)" font-family="'PingFang SC',sans-serif">为您量身定制财险产品</text>
+          <text x="8" y="60" font-size="6.5" fill="rgba(80,40,10,.7)" font-family="'PingFang SC',sans-serif">· 稳定保险客户经理</text>
+          <text x="8" y="72" font-size="6" fill="rgba(80,40,10,.55)" font-family="'PingFang SC',sans-serif">服务内容：</text>
+          <text x="8" y="83" font-size="6" fill="rgba(80,40,10,.55)" font-family="'PingFang SC',sans-serif">① 财产险板块产品咨询</text>
+          <text x="8" y="93" font-size="6" fill="rgba(80,40,10,.55)" font-family="'PingFang SC',sans-serif">② 投保规划与售后保障</text>
+        </svg>
+      </div>
+      <div class="ctitle">高小定精选小班课</div>
+    </div>
+
+  </div><!-- /course-grid -->
+
+</div><!-- /page-home -->
+
 <!-- ── PAGE 1 大盘 ── -->
-<div class="page active" id="page-market">
+<div class="page" id="page-market">
 
   <div class="market-banner">
     <div class="market-meta">
@@ -585,92 +1088,50 @@ body{
   </div>
 </div>
 
-<!-- ── PAGE 3 论坛：圈子列表 ── -->
+<!-- ── PAGE 3 论坛：老师轮播驱动 ── -->
 <div class="page" id="page-forum">
-  <div class="forum-head">
-    <div class="forum-head-title">发现圈子</div>
-    <div class="forum-head-sub">加入感兴趣的圈子，与同好深度交流</div>
+
+  <!-- 老师介绍轮播 -->
+  <div class="teacher-slider-wrap">
+    <div class="teacher-slider">
+      <div class="ts-track" id="tsTrack"></div>
+    </div>
+    <div class="ts-nav" id="tsDots"></div>
+    <div class="ts-arrows">
+      <div class="ts-arrow" onclick="prevTeacher()">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      </div>
+      <div class="ts-arrow" onclick="nextTeacher()">
+        <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+      </div>
+    </div>
   </div>
 
-  <div class="circle-list">
+  <!-- 联动内容（圈子 + 课程 + 直播） -->
+  <div class="forum-content">
 
-    <div class="circle-card" onclick="openCircle(0)">
-      <div class="circle-icon" style="background:linear-gradient(135deg,#C8860A,#E8A020)">
-        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      </div>
-      <div class="circle-info">
-        <div class="circle-name">A股实战圈</div>
-        <div class="circle-desc">聚焦 A 股技术分析与实战操盘，每日盘前盘后复盘，资深股民带你读懂市场信号。</div>
-        <div class="circle-meta">
-          <span><strong>12,480</strong> 成员</span>
-          <span><strong>326</strong> 今日帖子</span>
-        </div>
-      </div>
-      <div class="circle-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <!-- 关联圈子 -->
+    <div class="forum-sec">
+      <div class="forum-sec-lbl">关联圈子</div>
+      <div class="forum-sec-more">进入圈子 ›</div>
     </div>
+    <div id="forumCircleWrap"></div>
 
-    <div class="circle-card" onclick="openCircle(1)">
-      <div class="circle-icon" style="background:linear-gradient(135deg,#2A5298,#4A9EFF)">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-      </div>
-      <div class="circle-info">
-        <div class="circle-name">基金研究所</div>
-        <div class="circle-desc">公募、私募、ETF 全覆盖，专业基金经理分享持仓逻辑与宏观配置思路，适合稳健型投资者。</div>
-        <div class="circle-meta">
-          <span><strong>8,214</strong> 成员</span>
-          <span><strong>197</strong> 今日帖子</span>
-        </div>
-      </div>
-      <div class="circle-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <!-- 老师课程 -->
+    <div class="forum-sec" style="margin-top:8px">
+      <div class="forum-sec-lbl">老师的课程</div>
+      <div class="forum-sec-more">更多 ›</div>
     </div>
+    <div class="fl-grid" id="forumCourseGrid"></div>
 
-    <div class="circle-card" onclick="openCircle(2)">
-      <div class="circle-icon" style="background:linear-gradient(135deg,#0F7A54,#17A87D)">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      </div>
-      <div class="circle-info">
-        <div class="circle-name">新手理财营</div>
-        <div class="circle-desc">专为投资新手设计，从账户开立到资产配置，手把手教你建立自己的投资体系，零基础可入。</div>
-        <div class="circle-meta">
-          <span><strong>31,056</strong> 成员</span>
-          <span><strong>512</strong> 今日帖子</span>
-        </div>
-      </div>
-      <div class="circle-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+    <!-- 老师直播 -->
+    <div class="forum-sec" style="margin-top:10px">
+      <div class="forum-sec-lbl">老师的直播</div>
+      <div class="forum-sec-more">更多 ›</div>
     </div>
-
-    <div class="circle-card" onclick="openCircle(3)">
-      <div class="circle-icon" style="background:linear-gradient(135deg,#6B2FA0,#A855F7)">
-        <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-      </div>
-      <div class="circle-info">
-        <div class="circle-name">量化策略圈</div>
-        <div class="circle-desc">量化模型、因子挖掘、策略回测，汇聚数据科学家与量化研究员，代码与逻辑并重的专业社区。</div>
-        <div class="circle-meta">
-          <span><strong>4,380</strong> 成员</span>
-          <span><strong>89</strong> 今日帖子</span>
-        </div>
-      </div>
-      <div class="circle-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
-    </div>
-
-    <div class="circle-card" onclick="openCircle(4)">
-      <div class="circle-icon" style="background:linear-gradient(135deg,#8B1A2F,#D94040)">
-        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-      </div>
-      <div class="circle-info">
-        <div class="circle-name">全球宏观研究</div>
-        <div class="circle-desc">美联储政策、汇率波动、大宗商品，从宏观视角解读全球资金流向，看懂世界经济的底层逻辑。</div>
-        <div class="circle-meta">
-          <span><strong>6,720</strong> 成员</span>
-          <span><strong>143</strong> 今日帖子</span>
-        </div>
-      </div>
-      <div class="circle-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
-    </div>
+    <div class="fl-grid" id="forumLiveGrid"></div>
 
   </div>
-  <div style="height:16px"></div>
 </div>
 
 <!-- ── PAGE 4 圈子详情 ── -->
@@ -694,7 +1155,11 @@ body{
 
 <!-- TAB BAR -->
 <div class="tab-bar">
-  <div class="tab active" onclick="switchTab('market','金融大盘',this)">
+  <div class="tab active" onclick="switchTab('home','首页',this)">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>首页</span>
+  </div>
+  <div class="tab" onclick="switchTab('market','大盘',this)">
     <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
     <span>大盘</span>
   </div>
@@ -702,7 +1167,7 @@ body{
     <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/><path d="M9 14.5s1 1.5 3 1.5 3-1.5 3-1.5"/></svg>
     <span>AI 助手</span>
   </div>
-  <div class="tab" onclick="switchTab('forum','金融论坛',this)">
+  <div class="tab" onclick="switchTab('forum','论坛',this)">
     <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
     <span>论坛</span>
   </div>
@@ -712,7 +1177,7 @@ body{
 /* ── 导航 ── */
 const MENU_ICON = `<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>`;
 const BACK_ICON = `<polyline points="15 18 9 12 15 6"/>`;
-let currentPage = 'market';
+let currentPage = 'home';
 
 function handleLeft(){
   if(currentPage === 'circle') backToForum();
@@ -732,6 +1197,15 @@ function switchTab(name,title,el){
   const pg = document.getElementById('page-'+name);
   pg.classList.add('active');
   if(name==='ai'){pg.style.display='flex';}
+}
+
+function switchCtab(el){
+  el.closest('.ctabs').querySelectorAll('.ctab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+function switchCstab(el){
+  el.closest('.cstabs').querySelectorAll('.cstab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
 }
 
 /* ── 圈子数据 ── */
@@ -918,6 +1392,216 @@ function showTyping(v){
 }
 document.getElementById('chatInput').addEventListener('keypress',e=>{if(e.key==='Enter')sendMsg();});
 </script>
+<script>
+/* ══ 论坛 - 老师轮播驱动 ══ */
+const teachers = [
+  {
+    name:'韩小北', av:'韩', avBg:'#B07010',
+    title:'资深股民 · 10年操盘经验',
+    bio:'曾任某私募交易员，专注技术面分析与量能研判，擅长捕捉主力资金异动，累计帮助 2000+ 学员建立实战操盘体系，课程好评率 98%。',
+    followers:'2.1万', courseCount:6, liveCount:12,
+    tags:['技术分析','A股实战','量能研判'],
+    circleIdx:0,
+    courses:[
+      {title:'A股实战操盘精讲课',price:'¥298',orig:'¥599',lbl:'操盘实战',bg:'linear-gradient(135deg,#7A4200,#C87808)'},
+      {title:'K线量能实战手册',price:'¥198',orig:'¥399',lbl:'K线精讲',bg:'linear-gradient(135deg,#4A2800,#9A5800)'},
+    ],
+    lives:[
+      {title:'盘前分析：今日重点关注板块',badge:'回放',time:'今日 09:15',viewers:'3,241',price:'免费',free:true,bg:'linear-gradient(135deg,#6A3A00,#B86A08)'},
+      {title:'中芯国际突破后怎么操作',badge:'直播中',on:true,time:'17:00',viewers:'1,458',price:'¥99',orig:'¥199',bg:'linear-gradient(135deg,#301800,#703800)'},
+    ]
+  },
+  {
+    name:'林青鱼', av:'林', avBg:'#2A5298',
+    title:'公募基金经理 · CFA持证',
+    bio:'10年公募从业经验，管理规模超50亿，擅长消费与科技赛道深度基本面研究，坚信价值投资与长期持有的复利力量，多次荣获金牛奖。',
+    followers:'8,214', courseCount:9, liveCount:24,
+    tags:['基金配置','ETF投资','基本面研究'],
+    circleIdx:1,
+    courses:[
+      {title:'公募基金实战精讲课',price:'¥398',orig:'¥799',lbl:'基金精讲',bg:'linear-gradient(135deg,#0D2060,#2050A0)'},
+      {title:'ETF指数定投系统课',price:'¥258',orig:'¥499',lbl:'ETF定投',bg:'linear-gradient(135deg,#1A3070,#3060B0)'},
+    ],
+    lives:[
+      {title:'2026下半年基金配置策略直播',badge:'精华',time:'38分钟前',viewers:'12,450',price:'免费',free:true,bg:'linear-gradient(135deg,#0A1840,#1A3880)'},
+      {title:'哪些基金值得长期持有？',badge:'回放',time:'昨日 15:00',viewers:'6,230',price:'¥129',orig:'¥299',bg:'linear-gradient(135deg,#162850,#2A4890)'},
+    ]
+  },
+  {
+    name:'沈华', av:'沈', avBg:'#0F7A54',
+    title:'理财规划师 · CFP国际认证',
+    bio:'15年理财教育经验，擅长将复杂金融概念拆解为简单易懂的语言，相信每个普通人都能通过正确的方法实现财富自由，学员总数超10万。',
+    followers:'3.1万', courseCount:12, liveCount:36,
+    tags:['新手入门','资产配置','家庭理财'],
+    circleIdx:2,
+    courses:[
+      {title:'零基础理财入门7天训练',price:'¥99',orig:'¥299',lbl:'新手入门',bg:'linear-gradient(135deg,#0A4A30,#158A58)'},
+      {title:'家庭资产配置实操手册',price:'¥198',orig:'¥399',lbl:'资产配置',bg:'linear-gradient(135deg,#083820,#126048)'},
+    ],
+    lives:[
+      {title:'10万元如何做最优资产配置',badge:'直播中',on:true,time:'19:30',viewers:'8,920',price:'免费',free:true,bg:'linear-gradient(135deg,#083428,#107848)'},
+      {title:'新手开户后第一步买什么',badge:'回放',time:'周三 20:00',viewers:'18,200',price:'免费',free:true,bg:'linear-gradient(135deg,#0A3820,#126040)'},
+    ]
+  },
+  {
+    name:'周天', av:'周', avBg:'#6B2FA0',
+    title:'量化研究员 · 金融工程博士',
+    bio:'金融工程博士，曾任顶级私募量化研究员，专注多因子模型与高频数据挖掘，开源量化框架 GitHub 获 5000+ Star，知乎量化专栏百万阅读。',
+    followers:'4,380', courseCount:5, liveCount:8,
+    tags:['量化模型','因子研究','Python金融'],
+    circleIdx:3,
+    courses:[
+      {title:'Python量化交易从入门到实战',price:'¥598',orig:'¥1199',lbl:'Python量化',bg:'linear-gradient(135deg,#3A0870,#6A1AB0)'},
+      {title:'多因子选股模型精讲',price:'¥398',orig:'¥799',lbl:'多因子模型',bg:'linear-gradient(135deg,#280560,#4E10A0)'},
+    ],
+    lives:[
+      {title:'Python实现A股量价规律挖掘',badge:'精华',time:'2小时前',viewers:'8,720',price:'¥199',orig:'¥399',bg:'linear-gradient(135deg,#200450,#400C90)'},
+      {title:'动量因子回测实操全流程',badge:'回放',time:'周一 21:00',viewers:'3,410',price:'¥99',orig:'¥199',bg:'linear-gradient(135deg,#300660,#5010A0)'},
+    ]
+  },
+  {
+    name:'王道远', av:'王', avBg:'#8B1A2F',
+    title:'宏观策略研究员 · 前国际投行',
+    bio:'曾任国际投行宏观研究部门，覆盖美欧日中四大经济体，擅长通过货币政策与资本流动预判大类资产走势，现独立撰写宏观研究报告，月阅读量破百万。',
+    followers:'6,720', courseCount:4, liveCount:16,
+    tags:['宏观经济','汇率分析','大类资产'],
+    circleIdx:4,
+    courses:[
+      {title:'美联储政策解读与资产配置',price:'¥498',orig:'¥999',lbl:'宏观解读',bg:'linear-gradient(135deg,#500A18,#900A1A)'},
+      {title:'全球汇率波动交易策略',price:'¥398',orig:'¥799',lbl:'汇率策略',bg:'linear-gradient(135deg,#3A0810,#700A14)'},
+    ],
+    lives:[
+      {title:'美联储6月会议：降息预期深度分析',badge:'热帖',time:'30分钟前',viewers:'9,840',price:'免费',free:true,bg:'linear-gradient(135deg,#420A14,#800A0A)'},
+      {title:'黄金突破历史新高后的操作策略',badge:'回放',time:'昨日 20:00',viewers:'7,230',price:'¥149',orig:'¥299',bg:'linear-gradient(135deg,#300810,#680A0A)'},
+    ]
+  },
+];
+
+let activeTeacherIdx = 0;
+let forumInited = false;
+
+function initForum(){
+  if(forumInited) return;
+  forumInited = true;
+  renderTeacherSlider();
+  renderForumContent(0);
+}
+
+function renderTeacherSlider(){
+  const track = document.getElementById('tsTrack');
+  const dots = document.getElementById('tsDots');
+
+  track.innerHTML = teachers.map((t,i) => `
+    <div class="ts-card">
+      <div class="ts-inner">
+        <div class="ts-top">
+          <div class="ts-av" style="background:${t.avBg}">${t.av}</div>
+          <div class="ts-info">
+            <div class="ts-name">${t.name}</div>
+            <div class="ts-title">${t.title}</div>
+            <div class="ts-stats">
+              <div class="ts-stat"><div class="ts-stat-val">${t.followers}</div><div class="ts-stat-lbl">关注者</div></div>
+              <div class="ts-stat"><div class="ts-stat-val">${t.courseCount}</div><div class="ts-stat-lbl">课程</div></div>
+              <div class="ts-stat"><div class="ts-stat-val">${t.liveCount}</div><div class="ts-stat-lbl">直播</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="ts-tags">${t.tags.map(g=>`<span class="ts-tag">${g}</span>`).join('')}</div>
+        <div class="ts-bio">${t.bio}</div>
+      </div>
+    </div>`).join('');
+
+  dots.innerHTML = teachers.map((_,i) =>
+    `<div class="ts-dot${i===0?' active':''}" onclick="goToTeacher(${i})"></div>`
+  ).join('');
+}
+
+function goToTeacher(idx){
+  activeTeacherIdx = idx;
+  const track = document.getElementById('tsTrack');
+  track.style.transform = `translateX(-${idx * 100}%)`;
+  updateTeacherDots(idx);
+  renderForumContent(idx);
+}
+
+function prevTeacher(){
+  const idx = (activeTeacherIdx - 1 + teachers.length) % teachers.length;
+  goToTeacher(idx);
+}
+function nextTeacher(){
+  const idx = (activeTeacherIdx + 1) % teachers.length;
+  goToTeacher(idx);
+}
+
+function updateTeacherDots(idx){
+  document.querySelectorAll('.ts-dot').forEach((d,i)=>{
+    d.classList.toggle('active', i===idx);
+  });
+}
+
+function renderForumContent(idx){
+  const t = teachers[idx];
+  const c = circles[t.circleIdx];
+
+  /* 圈子卡 */
+  const svgIcon = `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${c.icon}</svg>`;
+  document.getElementById('forumCircleWrap').innerHTML = `
+    <div class="fc-circle" onclick="openCircle(${t.circleIdx})">
+      <div class="fc-ci" style="background:${c.color}">${svgIcon}</div>
+      <div class="fc-info">
+        <div class="fc-cn">${c.name}</div>
+        <div class="fc-cd">${c.desc}</div>
+        <div class="fc-cm">
+          <span><strong>${c.members}</strong> 成员</span>
+          <span><strong>${c.posts}</strong> 今日帖子</span>
+        </div>
+      </div>
+      <div class="fc-ca"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--gold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>`;
+
+  /* 课程卡片 */
+  document.getElementById('forumCourseGrid').innerHTML = t.courses.map(cr => `
+    <div class="fl-card">
+      <div class="fl-thumb" style="background:${cr.bg}">
+        <div class="fl-thumb-lbl">${cr.lbl}</div>
+      </div>
+      <div class="fl-info">
+        <div class="fl-title">${cr.title}</div>
+        <div class="fl-price">${cr.price}<span class="orig">${cr.orig}</span></div>
+      </div>
+    </div>`).join('');
+
+  /* 直播卡片 */
+  document.getElementById('forumLiveGrid').innerHTML = t.lives.map(lv => `
+    <div class="fl-card">
+      <div class="fl-thumb" style="background:${lv.bg}">
+        <div class="fl-thumb-lbl">${lv.title.length>14?lv.title.slice(0,14)+'…':lv.title}</div>
+        <div class="fl-badge${lv.on?' on':''}">${lv.badge}</div>
+        <div class="fl-ftime">${lv.time}</div>
+      </div>
+      <div class="fl-info">
+        <div class="fl-title">${lv.title}</div>
+        <div class="fl-viewers">${lv.viewers}人观看</div>
+        <div class="fl-price${lv.free?' free':''}">${lv.price}${lv.orig?`<span class="orig">${lv.orig}</span>`:''}</div>
+      </div>
+    </div>`).join('');
+}
+
+/* 切到论坛 tab 时初始化 */
+const _origSwitchTab = window.switchTab || switchTab;
+(function(){
+  const tabEls = document.querySelectorAll('.tab');
+  tabEls.forEach(el => {
+    if(el.getAttribute('onclick') && el.getAttribute('onclick').includes("'forum'")) {
+      const orig = el.getAttribute('onclick');
+      el.setAttribute('onclick', orig.replace('switchTab(', '_forumTabProxy('));
+    }
+  });
+})();
+function _forumTabProxy(name, title, el){
+  _origSwitchTab(name, title, el);
+  if(name === 'forum') setTimeout(initForum, 60);
+}
+</script>
 </body>
 </html>
-
